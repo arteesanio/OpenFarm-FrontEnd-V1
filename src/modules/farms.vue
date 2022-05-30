@@ -67,7 +67,7 @@
                                     <div>
                                         <span class="tx-lg tx-success">{{pool.rewardDebt}}</span>
                                         /
-                                        <span>{{pool.pendingCake}}</span>
+                                        <span>{{pool.pendingCash}}</span>
                                     </div>
                                 </div>
                                 <div class="tx-xs opacity-25">{{LANG.lastRewardBlock}}: {{pool.lastRewardBlock}}</div>
@@ -89,7 +89,7 @@
                                         <div class="tx-sm opacity-50">{{LANG.farmStats}}</div>
                                         <div class="flex-between w-100 tx-xs opacity-25">
                                             <div>{{LANG.weight}}: {{pool.allocPoint}}</div>
-                                            <div>{{LANG.allocation}}: {{pool.accCakePerShare}}</div>
+                                            <div>{{LANG.allocation}}: {{pool.accCashPerShare}}</div>
                                         </div>
                                         <div class="tx-xs opacity-25 mt-2">{{pool.lpToken}}</div>
                                         <div class="tx-xs opacity-25 "><small>{{pool.token0}}</small></div>

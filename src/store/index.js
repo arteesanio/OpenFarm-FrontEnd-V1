@@ -207,8 +207,8 @@ const store = createStore({
           // console.log(i, "thePoolData", thePoolData)
           let theUserInfo = await chefContract.userInfo(i, firstAddress)
           // console.log(i, "theUserInfo", theUserInfo)
-          const pendingCake = await chefContract.pendingCake(i, firstAddress)
-          // console.log(i, "pendingCake", pendingCake)
+          const pendingCash = await chefContract.pendingCash(i, firstAddress)
+          // console.log(i, "pendingCash", pendingCash)
 
           const lpContract = new Contract(thePoolData.lpToken, ABIS.PAIR, BLOCKCHAIN)
 
@@ -229,17 +229,17 @@ const store = createStore({
           // console.log(parseFloat(ethers.utils.formatEther(chefAllowance)))
           // console.log(parseDecimals(parseFloat(ethers.utils.formatEther(chefAllowance).toString())))
 
-          // (user.amount * pool.accCakePerShare) - user.rewardDebt
+          // (user.amount * pool.accCashPerShare) - user.rewardDebt
 
           let newPoolData = {
             pid: i,
             lpToken: thePoolData.lpToken,
             allocPoint: parseFloat(thePoolData.allocPoint.toString()),
             lastRewardBlock: parseInt(thePoolData.lastRewardBlock.toString()),
-            accCakePerShare: parseDecimals(parseFloat(ethers.utils.formatEther(thePoolData.accCakePerShare))),
+            accCashPerShare: parseDecimals(parseFloat(ethers.utils.formatEther(thePoolData.accCashPerShare))),
 
             allowance: parseDecimals(ethers.utils.formatEther(chefAllowance)),
-            pendingCake: parseDecimals(parseFloat(ethers.utils.formatEther(pendingCake))),
+            pendingCash: parseDecimals(parseFloat(ethers.utils.formatEther(pendingCash))),
 
             amount: parseDecimals(parseFloat(ethers.utils.formatEther(theUserInfo.amount))),
             rewardDebt: parseDecimals(parseFloat(ethers.utils.formatEther(theUserInfo.rewardDebt))),
@@ -263,8 +263,8 @@ const store = createStore({
       console.log("blockNumber", blockNumber)
       const chefContract = new Contract(CURRENT_NETWORK.MASTERCHEF_ADDRESS, ABIS.MASTERCHEF, BLOCKCHAIN)
 
-      let cakePerBlock = await chefContract.cakePerBlock()
-      console.log("cake per block", ethers.utils.formatEther(cakePerBlock))
+      let cashPerBlock = await chefContract.cashPerBlock()
+      console.log("cash per block", ethers.utils.formatEther(cashPerBlock))
 
       return new Promise(async (resolve, reject) => {
         // let poolsLengthData = await chefContract.poolLength()
@@ -280,8 +280,8 @@ const store = createStore({
           // console.log(i, "thePoolData", thePoolData)
           let theUserInfo = await chefContract.userInfo(farmData.pid, firstAddress)
           // console.log(i, "theUserInfo", theUserInfo)
-          const pendingCake = await chefContract.pendingCake(farmData.pid, firstAddress)
-          // console.log(i, "pendingCake", pendingCake)
+          const pendingCash = await chefContract.pendingCash(farmData.pid, firstAddress)
+          // console.log(i, "pendingCash", pendingCash)
 
           const lpContract = new Contract(farmData.lpToken, ABIS.PAIR, BLOCKCHAIN)
 
@@ -302,7 +302,7 @@ const store = createStore({
           // console.log(parseFloat(ethers.utils.formatEther(chefAllowance)))
           // console.log(parseDecimals(parseFloat(ethers.utils.formatEther(chefAllowance).toString())))
 
-          // (user.amount * pool.accCakePerShare) - user.rewardDebt
+          // (user.amount * pool.accCashPerShare) - user.rewardDebt
 
           let newPoolData = {
             // pid: i,
@@ -310,10 +310,10 @@ const store = createStore({
 
             allocPoint: parseFloat(thePoolData.allocPoint.toString()),
             lastRewardBlock: parseInt(thePoolData.lastRewardBlock.toString()),
-            accCakePerShare: parseDecimals(parseFloat(ethers.utils.formatEther(thePoolData.accCakePerShare))),
+            accCashPerShare: parseDecimals(parseFloat(ethers.utils.formatEther(thePoolData.accCashPerShare))),
 
             allowance: parseDecimals(ethers.utils.formatEther(chefAllowance)),
-            pendingCake: parseDecimals(parseFloat(ethers.utils.formatEther(pendingCake))),
+            pendingCash: parseDecimals(parseFloat(ethers.utils.formatEther(pendingCash))),
 
             amount: parseDecimals(parseFloat(ethers.utils.formatEther(theUserInfo.amount))),
             rewardDebt: parseDecimals(parseFloat(ethers.utils.formatEther(theUserInfo.rewardDebt))),

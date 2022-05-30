@@ -77,10 +77,10 @@ export const ABIS = {
     'function poolLength() external view returns (uint256)',
     'function deposit(uint256 _pid, uint256 _amount) external',
     'function withdraw(uint256 _pid, uint256 _amount) external',
-    'function pendingCake(uint256 _pid, address _user) external view returns (uint256)',
+    'function pendingCash(uint256 _pid, address _user) external view returns (uint256)',
     'function updatePool(uint256 _pid) external',
-    'function cake() external view returns (address)',
-    'function cakePerBlock() external view returns (uint256)',
+    'function cash() external view returns (address)',
+    'function cashPerBlock() external view returns (uint256)',
     {
       "inputs": [
         {
@@ -137,7 +137,7 @@ export const ABIS = {
         },
         {
           "internalType": "uint256",
-          "name": "accCakePerShare",
+          "name": "accCashPerShare",
           "type": "uint256"
         }
       ],
@@ -150,7 +150,7 @@ export const ABIS = {
   ],
 };
 
-// https://docs.pancakeswap.finance/code/smart-contracts/pancakeswap-exchange/router-v2
+
 export const bscNetwork = {
   RPC_URL: 'https://bsc-dataseed1.binance.org',
   ROUTER_ADDRESS: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
@@ -263,6 +263,78 @@ export const maticNetwork = {
       id: 'FRUIT',
       address: "0x40e11f5e8027080a222eb8955f44aaef07e828d8",
       chainlink_address: "0x40e11f5e8027080a222eb8955f44aaef07e828d8",
+      image:
+        './res/995996.jpg',
+      price: 0,
+    },
+
+    {
+      id: 'BTC',
+      address: "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+      chainlink_address: "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+      image:
+        './res/1.png',
+      price: 0,
+    },
+    {
+      id: 'ETH',
+      address: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+      chainlink_address: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+      image:
+        './res/1027.png',
+      price: 0,
+    },
+  ],
+};
+export const maticNetworkNew = {
+  RPC_URL: 'https://bsc-dataseed1.binance.org',
+
+  ROUTER_ADDRESS: '0x9dE002F4220e5156d329B0a1F434Ea7C19F20861',
+  CONTROLLER_ADDRESS: '0x9dE002F4220e5156d329B0a1F434Ea7C19F20861',
+
+  FACTORY_ADDRESS: '0xc839E118d37CFEF20fc6f439F50ee3B3a7656F6f',
+  BANK_ADDRESS: '0xc839E118d37CFEF20fc6f439F50ee3B3a7656F6f',
+
+  WETH_ADDRESS: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  BASE_TOKEN_ADDRESS: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+
+  FRUIT_ADDRESS: '0x2E138eD775CfAdD1823BD110D3369eC010eF434B',
+  CASH_ADDRESS: '0x2E138eD775CfAdD1823BD110D3369eC010eF434B',
+
+  SEED_ADDRESS: '0x29819f28686bd416Df02A0d3343f065983a2b20f',
+  BOND_ADDRESS: '0x29819f28686bd416Df02A0d3343f065983a2b20f',
+
+  MASTERCHEF_ADDRESS: '0xE8cb75C3D1917298d2ccCbab3cCC4C08222451db',
+  PRINTER_ADDRESS: '0xE8cb75C3D1917298d2ccCbab3cCC4C08222451db',
+
+  SOUSCHEF_ADDRESS: '0xFE25096946Ec74E7CD19bE4cef3d5B69ce2f4ed9',
+  RESERVE_ADDRESS: '0xFE25096946Ec74E7CD19bE4cef3d5B69ce2f4ed9',
+
+  BASE_TOKEN: 'MATIC',
+  BASE_USD_ID: 'USD (DAI)',
+  BASE_USD_ADDRESS: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+  TOKEN_LIST: [
+    {
+      id: 'MATIC',
+      address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+      chainlink_address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+      image:
+        './res/3890.png',
+      price: 1,
+    },
+    {
+      id: 'USD (DAI)',
+      address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+      chainlink_address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+      image:
+        './res/4943.png',
+      price: 0,
+    },
+
+    {
+      id: 'CASH',
+      address: "0x2E138eD775CfAdD1823BD110D3369eC010eF434B",
+      chainlink_address: "0x2E138eD775CfAdD1823BD110D3369eC010eF434B",
       image:
         './res/995996.jpg',
       price: 0,
@@ -417,5 +489,6 @@ export const localNetwork = {
 };
 // export const CURRENT_NETWORK = localNetwork;
 // export const CURRENT_NETWORK = bscNetwork;
+// export const CURRENT_NETWORK = ftmNetwork;
 // export const CURRENT_NETWORK = maticNetwork;
-export const CURRENT_NETWORK = ftmNetwork;
+export const CURRENT_NETWORK = maticNetworkNew;

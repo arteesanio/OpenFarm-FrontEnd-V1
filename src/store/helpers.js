@@ -28,6 +28,8 @@ export const ERROR_HELPER = {
                 return "high price impact, \nSETTINGS -> MARGIN OF ERROR"
               case "execution reverted: UniswapV2Router: EXCESSIVE_INPUT_AMOUNT":
                 return "flawed exchange rate, \nSETTINGS -> MARGIN OF ERROR"
+              case "execution reverted: FarmController: EXCESSIVE_INPUT_AMOUNT":
+                return "flawed exchange rate, \nSETTINGS -> MARGIN OF ERROR"
               default:
                 return error.data.message
             }
@@ -37,6 +39,9 @@ export const ERROR_HELPER = {
               case "execution reverted: UniswapV2Router: INSUFFICIENT_A_AMOUNT":
                 return "flawed exchange rate (from), \nSETTINGS -> MARGIN OF ERROR"
               case "execution reverted: UniswapV2Router: INSUFFICIENT_B_AMOUNT":
+              case "execution reverted: FarmController: INSUFFICIENT_A_AMOUNT":
+                return "flawed exchange rate (from), \nSETTINGS -> MARGIN OF ERROR"
+              case "execution reverted: FarmController: INSUFFICIENT_B_AMOUNT":
                 return "flawed exchange rate (to), \nSETTINGS -> MARGIN OF ERROR"
               default:
                 return error.data.message

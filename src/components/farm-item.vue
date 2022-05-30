@@ -28,11 +28,11 @@
           <div class="tx-sm opacity-50 mr-2"> {{LANG.rewards}}: </div>
 
           <div>
-              <span class="tx-lg tx-success">{{farm.pendingCake}}</span>
+              <span class="tx-lg tx-success">{{farm.pendingCash}}</span>
           </div>
       </div>
       <div class="flex-center">
-        <div v-if="farm.pendingCake" @click="farm_redeem(index)" class="border-r-15 clickable tx-xs opacity-hover-75 n-flat pa-2">
+        <div v-if="farm.pendingCash" @click="farm_redeem(index)" class="border-r-15 clickable tx-xs opacity-hover-75 n-flat pa-2">
           <i v-if="loadings.redeem" class="tx-success fas fa-circle-notch spin-spin"></i>
           {{LANG.redeem}}
         </div>
@@ -80,7 +80,7 @@
               <div class="tx-sm opacity-50">{{LANG.farmStats}}</div>
               <div class="flex-between w-100 tx-xs opacity-25">
                   <div>{{LANG.weight}}: {{farm.allocPoint}}</div>
-                  <div>{{LANG.allocation}}: {{farm.accCakePerShare}}</div>
+                  <div>{{LANG.allocation}}: {{farm.accCashPerShare}}</div>
               </div>
               <div class="tx-xs opacity-25 mt-2">{{farm.lpToken}}</div>
               <div class="tx-xs opacity-25 "><small>{{farm.token0}}</small></div>
