@@ -1,5 +1,5 @@
 <template>
-    <div :class="!dark_mode ? 'light-theme' : 'dark-theme'" class="main-body n-bg n-tx">
+    <div :class="!!dark_mode ? 'dark-theme' : 'light-theme'" class="main-body n-bg n-tx">
 
         <main-menu />
         

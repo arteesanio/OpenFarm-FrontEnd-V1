@@ -62,8 +62,12 @@
 	        accs_length()          { return this.$store.getters.accs_length },
         },
         created() {
-            this.$store.dispatch("setDarkMode", JSON.parse(localStorage.getItem("darkMode")))
-            this.$store.dispatch("setEnglishMode", JSON.parse(localStorage.getItem("englishMode")))
+            let darkMode = JSON.parse(localStorage.getItem("darkMode"))
+            console.log(darkMode)
+            let englishMode = JSON.parse(localStorage.getItem("englishMode"))
+            console.log(englishMode)
+            if (darkMode != null) { this.$store.dispatch("setDarkMode", darkMode) }
+            if (englishMode != null) { this.$store.dispatch("setEnglishMode", englishMode) }
         },
         methods: {
             changeNightMode() {
