@@ -9,8 +9,8 @@ const store = createStore({
   state() {
     return {
       LANG,
-      darkMode: true,
-      englishMode: true,
+      darkMode: false,
+      englishMode: false,
 
       ethereum: window.ethereum,
       isMetaMaskInstalled: isMetaMaskInstalled(),
