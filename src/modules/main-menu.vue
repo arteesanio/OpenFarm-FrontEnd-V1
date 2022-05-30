@@ -30,8 +30,8 @@
                     @click="changeNightMode"
                 >
                     <span class="pa-4 opacity-hover-50">
-                        <i class="fas fa-sun icon-sun" v-if="dark_mode" ></i>
-                        <i class="fas fa-moon icon-moon" v-else ></i>
+                        <i class="fas fa-moon icon-moon" v-if="dark_mode" ></i>
+                        <i class="fas fa-sun icon-sun" v-else ></i>
                     </span>
                 </button>
                 <button class="noborder n-tx tx-md n-conca clickable flex-center"
