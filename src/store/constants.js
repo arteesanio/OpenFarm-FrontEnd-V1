@@ -317,7 +317,7 @@ export const maticNetworkNew = {
     {
       id: 'MATIC',
       address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-      chainlink_address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+      chainlink_address: "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0",
       image:
         './res/3890.png',
       price: 1,
@@ -325,7 +325,7 @@ export const maticNetworkNew = {
     {
       id: 'USD (DAI)',
       address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
-      chainlink_address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+      chainlink_address: "0x4746DeC9e833A82EC7C2C1356372CcF2cfcD2F3D",
       image:
         './res/4943.png',
       price: 0,
@@ -343,7 +343,7 @@ export const maticNetworkNew = {
     {
       id: 'BTC',
       address: "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
-      chainlink_address: "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+      chainlink_address: "0xc907E116054Ad103354f2D350FD2514433D57F6f",
       image:
         './res/1.png',
       price: 0,
@@ -351,7 +351,7 @@ export const maticNetworkNew = {
     {
       id: 'ETH',
       address: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-      chainlink_address: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+      chainlink_address: "0xF9680D99D6C9589e2a93a78A04A279e509205945",
       image:
         './res/1027.png',
       price: 0,

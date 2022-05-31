@@ -365,14 +365,14 @@ const store = createStore({
           const tokenAddress = tokens[i].address 
           const tokenContract = new Contract(tokenAddress, ABIS.ERC20, BLOCKCHAIN)
           // console.log("tokenAddress, ABIS.ERC20, BLOCKCHAIN")
-          // console.log(tokenAddress, tokenContract.balanceOf)
           let PARSED_userAllowance = 0
           let PARSED_userBalance = 0
 
           const chainlinkContract = new Contract(tokens[i].chainlink_address, ABIS.CHAINLINK, BLOCKCHAIN)
+          console.log("tokens[i].chainlink_address", tokens[i].chainlink_address)
           const chainlinkPrice = await chainlinkContract.latestAnswer()
           const parsedChainlinkPrice = parseFloat(ethers.utils.formatEther(chainlinkPrice))*10**10
-          if (tokens[i].id != "FRUIT")
+          if (tokens[i].id != "CASH" || tokens[i].id != "FRUIT")
           {
             console.log({index: i, price: parseDecimals(parsedChainlinkPrice)}, tokens[i].id)
             let tokenIndex = token_list.find(x => x.address == tokens[i].address)
