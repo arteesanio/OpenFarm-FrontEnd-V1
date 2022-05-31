@@ -114,7 +114,7 @@ export default {
         articles()              { return this.$store.getters.articles },
         tokens()                { return this.$store.getters.tokens },
         token_list()            { return this.$store.getters.token_list },
-        token_list_r()          { return this.token_list.reverse() },
+        token_list_r()          { return [...this.token_list].reverse() },
         pools()                 { return this.$store.getters.pools },
         pools_length()          { return this.$store.getters.pools_length },
         retrieved_pool_length() { return this.$store.getters.retrieved_pool_length },

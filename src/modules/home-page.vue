@@ -17,13 +17,15 @@
         </div>
 
         <!-- <farms v-if="accs_length" /> -->
+        <tx-maker v-if="accs_length" />
+
     </div>
 </template>
 <script>
     import infispinner from "../components/infispinner.vue";
     import newItem from "../components/new-item.vue";
     import exchange from "./exchange.vue";
-    // import farms from "./farms.vue";
+    import txMaker from "./tx-maker.vue";
 
     export default {
         name: 'home-page',     
@@ -31,7 +33,7 @@
             infispinner,
 
             exchange,
-            // farms,
+            txMaker,
 
             newItem,
         },

@@ -6,6 +6,15 @@
         >
             {{LANG.clear}}
         </span> -->
+
+      <span
+        class="tx-secondary tx-xs opacity-hover-75"
+        v-if="accs_length && first_acc.allowances[token.address]"
+      >
+        allow: 
+        {{first_acc.allowances[token.address]}}
+      </span>
+      
         <input v-model="inputAmount" placeholder="0.0" type="text" name="amount" style="max-width: 110px;"
             class="opacity-hover-75 border-r-5 px-2 tx-right n-tx mt-0 ma-3 n-inset tx-lg noborder"
         />
@@ -118,13 +127,6 @@ export default {
 
       <!-- <small class=" opacity-75 letter-s-5 mt-3" :class="[!!index ? 'tx-primary' : 'tx-secondary']">{{ LANG[["from","to"][index]]}}</small> -->
 
-      <!-- <span
-        class="tx-secondary tx-xs opacity-hover-75"
-        v-if="accs_length && first_acc.allowances[token.address]"
-      >
-        allow: 
-        {{first_acc.allowances[token.address]}}
-      </span> -->
 
       <!-- <span
         class="clickable tx-secondary tx-xs opacity-hover-75 py-1"

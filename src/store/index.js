@@ -369,11 +369,13 @@ const store = createStore({
           let PARSED_userBalance = 0
 
           const chainlinkContract = new Contract(tokens[i].chainlink_address, ABIS.CHAINLINK, BLOCKCHAIN)
-          console.log("tokens[i].chainlink_address", tokens[i].chainlink_address)
-          const chainlinkPrice = await chainlinkContract.latestAnswer()
-          const parsedChainlinkPrice = parseFloat(ethers.utils.formatEther(chainlinkPrice))*10**10
-          if (tokens[i].id != "CASH" || tokens[i].id != "FRUIT")
+          // console.log("tokens[i].id", tokens[i].id, tokens[i].id != "CASH", tokens[i].id != "FRUIT")
+          if (tokens[i].id != "CASH" && tokens[i].id != "FRUIT")
           {
+            // console.log("tokens[i].chainlink_address", tokens[i].chainlink_address)
+            const chainlinkPrice = await chainlinkContract.latestAnswer()
+            const parsedChainlinkPrice = parseFloat(ethers.utils.formatEther(chainlinkPrice))*10**10
+
             console.log({index: i, price: parseDecimals(parsedChainlinkPrice)}, tokens[i].id)
             let tokenIndex = token_list.find(x => x.address == tokens[i].address)
             context.commit("updateTokenPriceAt", {index: token_list.indexOf(tokenIndex), price: parseDecimals(parsedChainlinkPrice)})
@@ -558,33 +560,33 @@ const store = createStore({
             }
           } else {
 
-            // let token0 = tokens[0]
-            // let token1 = tokens[1]
-            // let token0Amount = token0amount
-            // let token1Amount = token1amount
-            // let token0Amountslipped = token0amountslipped
-            // let token1Amountslipped = token1amountslipped
+            let token0 = tokens[0]
+            let token1 = tokens[1]
+            let token0Amount = token0amount
+            let token1Amount = token1amount
+            let token0Amountslipped = token0amountslipped
+            let token1Amountslipped = token1amountslipped
 
-            // const swapTx = await routerContract.addLiquidity(
-            //     token0.address,
-            //     token1.address,
-            //     token0Amount,
-            //     token1Amount,
-            //     token0Amountslipped,
-            //     token1Amountslipped,
-            //     firstAddress,
-            //     dueDate2,
-            // ).then(async (res) => {
-            //   console.log("tx sent!", res);
-            //   let aresultado = await res.wait()
-            //   console.log("tx res", aresultado);
-            //   await context.dispatch('refreshFirstAccount')
-            //   resolve(aresultado)
-            // }).catch((err) => {
+            const swapTx = await routerContract.addLiquidity(
+                token0.address,
+                token1.address,
+                token0Amount,
+                token1Amount,
+                token0Amountslipped,
+                token1Amountslipped,
+                firstAddress,
+                dueDate2,
+            ).then(async (res) => {
+              console.log("tx sent!", res);
+              let aresultado = await res.wait()
+              console.log("tx res", aresultado);
+              await context.dispatch('refreshFirstAccount')
+              resolve(aresultado)
+            }).catch((err) => {
               
-            //   console.log("failed addLiquidity", err);
-            //   reject(err)
-            // })
+              console.log("failed addLiquidity", err);
+              reject(err)
+            })
           }
         }  
       })
@@ -604,6 +606,9 @@ const store = createStore({
         let tokens = context.getters.tokens
 
         const factoryContract = new Contract(CURRENT_NETWORK.FACTORY_ADDRESS, ABIS.FACTORY, USER_WALLET)
+        const theHash = await factoryContract.INIT_CODE_PAIR_HASH()
+        console.log("theHash", theHash,)
+        console.log(theHash.toString())
 
         try {
           console.log("*** trying to createPair", tokenAddress, CURRENT_NETWORK.WETH_ADDRESS)
@@ -790,6 +795,9 @@ const store = createStore({
 
             resolve(newLp)
           } else {
+
+
+
             console.log("createPair", createPair ? 'true' : 'false')
             if (createPair)
             {
@@ -803,6 +811,9 @@ const store = createStore({
               }
             }
             reject("pair doesnt exists, createPair:"+ (createPair ? 'true' : 'false'))
+
+
+
           }
         } else {
           const pairAddress = await factoryContract.getPair(tokens[0].address, tokens[1].address)

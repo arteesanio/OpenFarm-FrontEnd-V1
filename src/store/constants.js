@@ -16,6 +16,7 @@ export const ABIS = {
   FACTORY: [
     'function getPair(address tokenA, address tokenB) external view returns (address pair)',
     'function createPair(address tokenA, address tokenB) external returns (address pair)',
+    'function INIT_CODE_PAIR_HASH() external view returns (bytes32)',
   ],
   CHAINLINK: [
     'function latestAnswer() external view returns (uint256)',
@@ -43,8 +44,10 @@ export const ABIS = {
       "stateMutability": "view",
       "type": "function"
     },
+    'function owner() external view returns (address)',
   ],
   ERC20: [
+    'function owner() external view returns (address)',
     'function transfer(address to, uint value) external returns (bool)',
     'function balanceOf(address account) external pure returns (uint256)',
     'function approve(address spender, uint256 amount) external returns (bool)',
@@ -59,6 +62,7 @@ export const ABIS = {
   ],
 
   FRUIT: [
+    'function owner() external view returns (address)',
     'function transferOwnership(address newOwner) external',
     'function transfer(address to, uint value) external returns (bool)',
     'function balanceOf(address account) external pure returns (uint256)',
@@ -66,6 +70,7 @@ export const ABIS = {
     'function allowance(address owner, address spender) external view returns (uint)',
   ],
   SEED: [
+    'function owner() external view returns (address)',
     'function transferOwnership(address newOwner) external',
     'function transfer(address to, uint value) external returns (bool)',
     'function balanceOf(address account) external pure returns (uint256)',
@@ -149,6 +154,8 @@ export const ABIS = {
     'function add(uint256 _allocPoint, address _lpToken, bool _withUpdate) external',
   ],
 };
+
+// https://docs.chain.link/docs/matic-addresses/
 
 
 export const bscNetwork = {
@@ -289,26 +296,26 @@ export const maticNetwork = {
 export const maticNetworkNew = {
   RPC_URL: 'https://bsc-dataseed1.binance.org',
 
-  ROUTER_ADDRESS: '0x9dE002F4220e5156d329B0a1F434Ea7C19F20861',
-  CONTROLLER_ADDRESS: '0x9dE002F4220e5156d329B0a1F434Ea7C19F20861',
-
   FACTORY_ADDRESS: '0xc839E118d37CFEF20fc6f439F50ee3B3a7656F6f',
   BANK_ADDRESS: '0xc839E118d37CFEF20fc6f439F50ee3B3a7656F6f',
+
+  ROUTER_ADDRESS: '0xe33a3c49577171e469cf823ee8b19295664fad5c',
+  CONTROLLER_ADDRESS: '0xe33a3c49577171e469cf823ee8b19295664fad5c',
 
   WETH_ADDRESS: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
   BASE_TOKEN_ADDRESS: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
 
-  FRUIT_ADDRESS: '0x2E138eD775CfAdD1823BD110D3369eC010eF434B',
-  CASH_ADDRESS: '0x2E138eD775CfAdD1823BD110D3369eC010eF434B',
+  FRUIT_ADDRESS: '0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829',
+  CASH_ADDRESS: '0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829',
 
-  SEED_ADDRESS: '0x29819f28686bd416Df02A0d3343f065983a2b20f',
-  BOND_ADDRESS: '0x29819f28686bd416Df02A0d3343f065983a2b20f',
+  SEED_ADDRESS: '0x51eC0B0b84Fa437023922d6e5EfCEb8056cd9716',
+  BOND_ADDRESS: '0x51eC0B0b84Fa437023922d6e5EfCEb8056cd9716',
 
-  MASTERCHEF_ADDRESS: '0xE8cb75C3D1917298d2ccCbab3cCC4C08222451db',
-  PRINTER_ADDRESS: '0xE8cb75C3D1917298d2ccCbab3cCC4C08222451db',
+  MASTERCHEF_ADDRESS: '0x710A73107d68bCdfA5511Ce7C8978B4AA866F8DB',
+  PRINTER_ADDRESS: '0x710A73107d68bCdfA5511Ce7C8978B4AA866F8DB',
 
-  SOUSCHEF_ADDRESS: '0xFE25096946Ec74E7CD19bE4cef3d5B69ce2f4ed9',
-  RESERVE_ADDRESS: '0xFE25096946Ec74E7CD19bE4cef3d5B69ce2f4ed9',
+  SOUSCHEF_ADDRESS: '0xaF44DFE0130f175148Ee0D7D722aA4f06F6D2203',
+  RESERVE_ADDRESS: '0xaF44DFE0130f175148Ee0D7D722aA4f06F6D2203',
 
   BASE_TOKEN: 'MATIC',
   BASE_USD_ID: 'USD (DAI)',
@@ -333,8 +340,8 @@ export const maticNetworkNew = {
 
     {
       id: 'CASH',
-      address: "0x2E138eD775CfAdD1823BD110D3369eC010eF434B",
-      chainlink_address: "0x2E138eD775CfAdD1823BD110D3369eC010eF434B",
+      address: "0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829",
+      chainlink_address: "0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829",
       image:
         './res/995996.jpg',
       price: 0,

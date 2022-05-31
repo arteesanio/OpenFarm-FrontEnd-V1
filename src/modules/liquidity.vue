@@ -2,7 +2,7 @@
 <template>
 	<div class="flex-column flex-1 w-100"  >
         
-    	<div v-if="_tradingBaseToken" class="flex-column pt-0 pa-3 mt-2 border-r-5" >
+    	<div  class="flex-column pt-0 pa-3 mt-2 border-r-5" >
         	<div class="flex">
 	        	<div v-if="!hasLpBalance && !loading">
 		        	<div class=" my-2 border-r-15 flex-column letter-s-3 py-1 px-3 tx-success clickable opacity-hover-75 n-flat mx-2" 
