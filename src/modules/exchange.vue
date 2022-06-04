@@ -37,7 +37,7 @@
 		    		{{LANG.help_inputAmount}}
 		    	</span> -->
 		        <token-input ref="token0ref" :index="0" :token="tokens[0]" :parentload="loading"
-		        	@updateInputAmount="token0Amount = $event"
+		        	@updateInputAmount="token0amount = $event"
 	        	/>
 		        <div class="flex-column">
 		        	<!-- <div v-if="accs_length && !loading" @click="editConfig"
@@ -78,18 +78,18 @@
 		        	</span>
 		        </div>
 		        <token-input ref="token1ref" :index="1" :token="tokens[1]" :parentload="loading"
-		        	@updateInputAmount="token1Amount = $event"
+		        	@updateInputAmount="token1amount = $event"
 	        	/>
 				<div v-if="accs_length" class="w-100 flex-column">
 		        	<!-- <hr class="w-50 opacity-5"> -->
 		        	<div class="flex-center tx-sm">
 		        		<span>{{LANG.trade}}</span>
 			        	<span class="tx-primary mx-2 tx-center">
-			        		{{token0Amount ? token0Amount : "..."}} <br> <small>{{tokens[0].id}}</small>
+			        		{{token0amount ? token0amount : "..."}} <br> <small>{{tokens[0].id}}</small>
 			        	</span>
 			        	<span class="">{{LANG.for}}</span>
 		        		<span class="w-100 flex-1 tx-center tx-secondary mx-2 tx-center">
-		        			{{token1Amount ? token1Amount : "..."}} <br> <small>{{tokens[1].id}}</small>
+		        			{{token1amount ? token1amount : "..."}} <br> <small>{{tokens[1].id}}</small>
 		        		</span>
 			        	<div class="flex-center">
 				            <div class="clickable opacity-hover-75 my-2 border-r-25 n-flat flex-column py-2 px-3" 
@@ -101,7 +101,7 @@
 				        		{{LANG.confirm}}
 				        	</div>
 				            <div class="noclick opacity-50 my-2 border-r-25 n-flat-disabled flex-column py-2 px-3" 
-				            	v-if="loading || token0Amount == 0 || token1Amount == 0 || !_hasFirstTokenAllowance" 
+				            	v-if="loading || token0amount == 0 || token1amount == 0 || !_hasFirstTokenAllowance" 
 				            >
 					        	<span class="tx-sm opacity-50 ">
 					        		{{LANG.confirm}}
@@ -113,7 +113,7 @@
 
 
 				<liquidity v-show="accs_length && configEditToggle" ref="liquidity"
-					:tokenInputs="{token0Amount,token1Amount}" :loadup="loading" class="mt-8"
+					:tokenInputs="{token0amount,token1amount}" :loadup="loading" class="mt-8"
 				/>
 
 	        	<div v-if="!accs_length" class="mt-2 w-100 tx-center">
@@ -130,11 +130,11 @@
 		        	<span>{{LANG.trade}}</span>
 		        	<div class="flex-center ">
 			        	<span class="tx-primary mx-2">
-			        		{{token0Amount ? token0Amount : "..."}} <small>{{tokens[0].id}}</small>
+			        		{{token0amount ? token0amount : "..."}} <small>{{tokens[0].id}}</small>
 			        	</span>
 			        	<span class="">{{LANG.for}}</span>
 		        		<span class="w-100 flex-1 tx-center tx-secondary mx-2">
-		        			{{token1Amount ? token1Amount : "..."}} <small>{{tokens[1].id}}</small>
+		        			{{token1amount ? token1amount : "..."}} <small>{{tokens[1].id}}</small>
 		        		</span>
 			        </div>
 		        	<div class="flex-column">
@@ -148,7 +148,7 @@
 				        		Confirm
 				        	</div>
 				            <div class="noclick opacity-50 my-2 border-r-15 n-flat flex-column py-3 px-6" 
-				            	v-if="loading || token0Amount == 0 || token1Amount == 0 || !_hasFirstTokenAllowance" 
+				            	v-if="loading || token0amount == 0 || token1amount == 0 || !_hasFirstTokenAllowance" 
 				            >
 					        	<span class="tx-sm opacity-50 ">
 					        		Confirm
@@ -165,7 +165,7 @@
 			</div>
 
 			<settings v-show="accs_length && configEditToggle" ref="settings"
-				:tokenInputs="{token0Amount,token1Amount}" :loadup="loading" 
+				:tokenInputs="{token0amount,token1amount}" :loadup="loading" 
 			/>
 
 	    	<!-- <markets class="show-xs_lg" v-if="accs_length && configEditToggle" ref="markets2" :loadup="loading"/> -->
@@ -188,8 +188,8 @@
 		data() {
 			return {
 				configEditToggle: false,
-				token0Amount: 0,
-				token1Amount: 0,
+				token0amount: 0,
+				token1amount: 0,
                 loading: false,
                 loadings: {},
 			}
@@ -223,8 +223,8 @@
 	        	return 	this.accs_length &&
 	        			this.first_acc.balances[this.tokens[0].id] &&
 	        			(
-	        				(this.token0Amount > 0) &&
-	        				(this.token1Amount > 0)
+	        				(this.token0amount > 0) &&
+	        				(this.token1amount > 0)
         				)
 	        },
 	        _bothInputsAre0()
@@ -232,15 +232,15 @@
 	        	return 	this.accs_length &&
 	        			this.first_acc.balances[this.tokens[0].id] &&
 	        			(
-	        				(this.token0Amount == 0 || this.token0Amount == "") &&
-	        				(this.token1Amount == 0 || this.token1Amount == "")
+	        				(this.token0amount == 0 || this.token0amount == "") &&
+	        				(this.token1amount == 0 || this.token1amount == "")
         				)
 	        },
 	        _secondInputIs0()
 	        {
 	        	return 	this.accs_length &&
 	        			this.first_acc.balances[this.tokens[0].id] &&
-        				(this.token1Amount == 0 || this.token1Amount == "")
+        				(this.token1amount == 0 || this.token1amount == "")
 	        },
 	        _someTokenNeedsBalance()
 	        {
@@ -260,9 +260,9 @@
 			},
 			async makeTrade() {
                 if (this.loading) { return }
-				if (this.token0Amount < 0.0001 || this.token1Amount < 0.0001) { return alert("too low")}
+				if (this.token0amount < 0.00001 || this.token1amount < 0.00001) { return alert("too low")}
                 this.loading = true
-				let trade = {token0Amount: this.token0Amount, token1Amount: this.token1Amount, slippage: parseFloat(this.$refs.settings.form.slippage)}
+				let trade = {token0amount: this.token0amount, token1amount: this.token1amount, slippage: parseFloat(this.$refs.settings.form.slippage)}
 				
             	const action = "makeTrade"
 	            try {
@@ -288,12 +288,12 @@
 			async getTradeData(refreshBalances = false) {
                 if (this.loading) { return } this.loading = true
 
-            	if (this.token0Amount == "" || !this.token0Amount || this.token0Amount == 0)
+            	if (this.token0amount == "" || !this.token0amount || this.token0amount == 0)
             	{
-	            	this.token0Amount = "1"
+	            	this.token0amount = "1"
 					this.$refs.token0ref.inputAmount = "1"
 				}
-				let trade = {token0Amount: this.token0Amount, token1Amount: this.token1Amount}
+				let trade = {token0amount: this.token0amount, token1amount: this.token1amount}
 				if (refreshBalances)
 				{
 					await this.$store.dispatch("refreshFirstAccount", true)
@@ -301,7 +301,7 @@
 				try {
 					let priceResult = await this.$store.dispatch("getTradeData", trade )
 
-					this.token1Amount = priceResult + ""
+					this.token1amount = priceResult + ""
 					this.$refs.token1ref.inputAmount = priceResult + ""
 				} catch (error)
 				{
@@ -318,11 +318,11 @@
                 if (this.loading) { return }
 
 				this.$store.dispatch("reverseToken")
-				let token1Amount = this.token1Amount
-				this.token1Amount = this.token0Amount
-				this.token0Amount = token1Amount
-				this.$refs.token1ref.inputAmount = this.token1Amount
-				this.$refs.token0ref.inputAmount = this.token0Amount
+				let token1amount = this.token1amount
+				this.token1amount = this.token0amount
+				this.token0amount = token1amount
+				this.$refs.token1ref.inputAmount = this.token1amount
+				this.$refs.token0ref.inputAmount = this.token0amount
 				// this.getTradeData()
 			},
             async refreshData() {
@@ -337,7 +337,7 @@
 
 
 	        	<!-- <span  @click="getTradeData" class="tx-success tx-xs mt-3 opacity-hover-75 tx-center clickable">
-	        		<template v-if="!loading && first_acc.balances[tokens[0].id] && token0Amount > 0 && token1Amount == 0">
+	        		<template v-if="!loading && first_acc.balances[tokens[0].id] && token0amount > 0 && token1amount == 0">
 		        		{{LANG.click}} <i  class="n-tx-s tx-xl fas fa-calculator"></i>
 		        		<br>
 		        		to generate exchange rate
@@ -349,7 +349,7 @@
 	        		</template>
 	        	</span> -->
 	        	<!-- <span
-	        		v-if="!loading && token0Amount && token1Amount && !_hasFirstTokenAllowance"
+	        		v-if="!loading && token0amount && token1amount && !_hasFirstTokenAllowance"
 	        		@click="approveToken0"
 	        		class="tx-success tx-xs mt-3 opacity-hover-75 tx-center clickable"
         		>

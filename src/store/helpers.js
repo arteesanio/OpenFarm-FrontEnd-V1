@@ -1,6 +1,100 @@
 import { Contract, providers, utils } from "ethers";
 
 
+export const parseTradeDataTokenAmounts = (_tokens, _tradeData) =>
+{
+  console.log("_tradeData***")
+  console.log(_tradeData)
+  console.log(_tokens)
+  console.log(_tokens[0].id)
+  console.log(_tokens[1].id)
+  let tradeData = {..._tradeData}
+
+  if (_tokens[0].id == "BTC")
+  {
+    tradeData.token0amount = parseFloat(tradeData.token0amount) / (10 ** 10)
+  }
+  if (_tokens[1].id == "BTC")
+  {
+    tradeData.token1amount = parseFloat(tradeData.token1amount) / (10 ** 10)
+  }
+  return {
+    token0amount: tradeData.token0amount + "",
+    token1amount: tradeData.token1amount + "",
+  }
+};
+export const fixBTCDecimalsMul = (_tokens, _tradeData) =>
+{
+  // console.log("_tradeData***")
+  // console.log(_tradeData)
+  // console.log(_tokens)
+  // console.log(_tokens[0].id)
+  // console.log(_tokens[1].id)
+  let tradeData = [..._tradeData]
+
+  if (_tokens[0].id == "BTC")
+  {
+    tradeData[0] = parseFloat(_tradeData[0]) * (10 ** 10)
+  }
+  if (_tokens[1].id == "BTC")
+  {
+    tradeData[1] = parseFloat(_tradeData[1]) * (10 ** 10)
+  }
+  // console.log("_tradeData***")
+  // console.log(_tradeData)
+  // console.log("_tradeData***")
+  return [
+   tradeData[0] + "",
+   tradeData[1] + "",
+  ]
+};
+export const fixBTCDecimalsDiv = (_tokens, _tradeData) =>
+{
+  // console.log("_tradeData***")
+  // console.log(_tradeData)
+  // console.log(_tokens)
+  // console.log(_tokens[0].id)
+  // console.log(_tokens[1].id)
+  let tradeData = [..._tradeData]
+
+  if (_tokens[0].id == "BTC")
+  {
+    tradeData[0] = parseFloat(_tradeData[0]) / (10 ** 10)
+  }
+  if (_tokens[1].id == "BTC")
+  {
+    tradeData[1] = parseFloat(_tradeData[1]) / (10 ** 10)
+  }
+  // console.log("_tradeData***")
+  // console.log(_tradeData)
+  // console.log("_tradeData***")
+  return [
+   tradeData[0] + "",
+   tradeData[1] + "",
+  ]
+};
+export const formatTradeDataTokenAmounts = (_tokens, _tradeData) =>
+{
+  console.log("_tradeData***")
+  console.log(_tradeData)
+  console.log(_tokens)
+  console.log(_tokens[0].id)
+  console.log(_tokens[1].id)
+  let tradeData = {..._tradeData}
+
+  if (_tokens[0].id == "BTC")
+  {
+    tradeData.token0amount = parseFloat(tradeData.token0amount) * (10 ** 10)
+  }
+  if (_tokens[1].id == "BTC")
+  {
+    tradeData.token1amount = parseFloat(tradeData.token1amount) * (10 ** 10)
+  }
+  return {
+    token0amount: tradeData.token0amount + "",
+    token1amount: tradeData.token1amount + "",
+  }
+};
 export const shortAddress = (address) =>
 {
   return address.substr(0,5)+"..."+address.substr(address.length-3,address.length)

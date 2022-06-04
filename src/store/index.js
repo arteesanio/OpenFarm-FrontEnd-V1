@@ -1,7 +1,7 @@
 import { createStore } from 'vuex';
 import { ethers, Contract }  from 'ethers';
 
-import { CONTRACT_HELPER, isMetaMaskInstalled, parseDecimals } from './helpers';
+import { CONTRACT_HELPER, isMetaMaskInstalled, parseDecimals, parseTradeDataTokenAmounts, formatTradeDataTokenAmounts, fixBTCDecimalsMul, fixBTCDecimalsDiv } from './helpers';
 import { ABIS, CURRENT_NETWORK } from './constants';
 import { LANG } from './lang';
 
@@ -433,7 +433,7 @@ const store = createStore({
       })
     },
 
-    getTradeData: async (context, tradeData) =>
+    getTradeData: async (context, _tradeData) =>
     {
       const firstAddress = context.getters.first_acc.address
       const tokens = context.getters.tokens
@@ -441,6 +441,11 @@ const store = createStore({
       const BLOCKCHAIN = context.getters.newProvider
       const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, BLOCKCHAIN)
       const oneEther = ethers.utils.parseUnits('1', 18)
+      console.log("_tradeData", _tradeData)
+      console.log(_tradeData.token0amount)
+      console.log(_tradeData.token1amount)
+      const tradeData = parseTradeDataTokenAmounts(tokens, _tradeData)
+
 
       return new Promise(async (resolve, reject) => {
         // console.log([CURRENT_NETWORK.BASE_USD_ADDRESS, CURRENT_NETWORK.WETH_ADDRESS])
@@ -449,21 +454,24 @@ const store = createStore({
         // const _parsedBasePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
         // const basePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
         // context.commit("updateTokenPriceAt", {index: 0, price: parseDecimals(basePrice)})
-        // console.log(`getTradeData baseprice ${basePrice} ${typeof basePrice}`)
-        const amountIn = ethers.utils.parseEther(tradeData.token0Amount);
-        const amountInFloat = parseFloat(tradeData.token0Amount);
+        console.log(`getTradeData `, tradeData)
+        const amountIn = ethers.utils.parseEther(tradeData.token0amount);
+        const amountInFloat = parseFloat(tradeData.token0amount);
 
         if (tokens[0].id != CURRENT_NETWORK.BASE_USD_ID && tokens[1].id != CURRENT_NETWORK.BASE_USD_ID )
         {
           const amountsresult = await routerContract.getAmountsOut(amountIn, [tokens[0].address, CURRENT_NETWORK.BASE_USD_ADDRESS ,tokens[1].address])
             // console.log(ethers.utils.formatEther(amountsresult[0]), ethers.utils.formatEther(amountsresult[1]))
+
           const __parsedAmountResult1 = parseFloat(ethers.utils.formatEther(amountsresult[2]))
-          resolve(parseDecimals(__parsedAmountResult1))
+          const doubleparsedamount1 = formatTradeDataTokenAmounts(tokens, {token1amount: __parsedAmountResult1, token0amount: "0"}).token1amount
+          resolve(parseDecimals(parseFloat(doubleparsedamount1)))
         } else {
           const amountsresult = await routerContract.getAmountsOut(amountIn, [tokens[0].address, tokens[1].address]);
           const __parsedAmountResult1 = parseFloat(ethers.utils.formatEther(amountsresult[1]))
-          console.log(ethers.utils.formatEther(amountsresult[0]), ethers.utils.formatEther(amountsresult[1]))
-          resolve(parseDecimals(__parsedAmountResult1))
+          const doubleparsedamount1 = formatTradeDataTokenAmounts(tokens, {token1amount: __parsedAmountResult1, token0amount: "0"}).token1amount
+          // console.log(ethers.utils.formatEther(amountsresult[0]), ethers.utils.formatEther(amountsresult[1]))
+          resolve(parseDecimals(parseFloat(doubleparsedamount1)))
         }
       })
     },
@@ -485,8 +493,8 @@ const store = createStore({
         const basePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
         // context.commit("updateTokenPriceAt", {index: 0, price: parseDecimals(basePrice)})
         console.log(`getTradeData baseprice ${basePrice} ${typeof basePrice}`)
-        const amountIn = ethers.utils.parseEther(tradeData.token0Amount);
-        const amountInFloat = parseFloat(tradeData.token0Amount);
+        const amountIn = ethers.utils.parseEther(tradeData.token0amount);
+        const amountInFloat = parseFloat(tradeData.token0amount);
 
         if (tokens[0].id == CURRENT_NETWORK.BASE_TOKEN)
         {
@@ -542,35 +550,35 @@ const store = createStore({
       })
     },
 
-    addLiquidity: async (context, tradeData) =>
+    addLiquidity: async (context, _tradeData) =>
     {
       const firstAddress = context.getters.first_acc.address
       let tokens = context.getters.tokens
       const BLOCKCHAIN = context.getters.newProvider
       const USER_WALLET = await BLOCKCHAIN.getSigner()
       const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, USER_WALLET)
-
+      const tradeData = parseTradeDataTokenAmounts(tokens, _tradeData)
       return new Promise(async (resolve, reject) => {
         if (tokens[0].id == "BTC")
         {
-          tradeData.token0Amount = parseFloat(tradeData.token0Amount) / (10 ** 10)
+          tradeData.token0amount = parseFloat(tradeData.token0amount) / (10 ** 10)
         }
         if (tokens[1].id == "BTC")
         {
-          tradeData.token1Amount = parseFloat(tradeData.token1Amount) / (10 ** 10)
+          tradeData.token1amount = parseFloat(tradeData.token1amount) / (10 ** 10)
         }
         console.table("add liquidity")
         console.table(tradeData)
 
-        let token0amountslipped = ethers.utils.parseEther((tradeData.token0Amount * (tradeData.slippage / 100)).toFixed(17))
-        let token1amountslipped = ethers.utils.parseEther((tradeData.token1Amount * (tradeData.slippage / 100)).toFixed(17))
-        let token0amount = ethers.utils.parseEther((parseFloat(tradeData.token0Amount).toFixed(17)).toString())
-        let token1amount = ethers.utils.parseEther((parseFloat(tradeData.token1Amount).toFixed(17)).toString())
+        let token0amountslipped = ethers.utils.parseEther((tradeData.token0amount * (tradeData.slippage / 100)).toFixed(17))
+        let token1amountslipped = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
+        let token0amount = ethers.utils.parseEther((parseFloat(tradeData.token0amount).toFixed(17)).toString())
+        let token1amount = ethers.utils.parseEther((parseFloat(tradeData.token1amount).toFixed(17)).toString())
         let dueDate2 = parseInt(Date.now() / 1000) + 1800
-        console.log(`add liquidity ${tradeData.token0Amount} ${tokens[0].id} for ${tradeData.token1Amount} ${tokens[1].id}`)
-        console.log("slippage", tradeData.slippage,"trade",tradeData.token0Amount, "for", (tradeData.token1Amount * (tradeData.slippage / 100)))
+        console.log(`add liquidity ${tradeData.token0amount} ${tokens[0].id} for ${tradeData.token1amount} ${tokens[1].id}`)
+        console.log("slippage", tradeData.slippage,"trade",tradeData.token0amount, "for", (tradeData.token1amount * (tradeData.slippage / 100)))
 
-        if (tradeData.token0Amount && tradeData.token1Amount)
+        if (tradeData.token0amount && tradeData.token1amount)
         {
           if ((tokens[0].id == CURRENT_NETWORK.BASE_TOKEN) || (tokens[1].id == CURRENT_NETWORK.BASE_TOKEN))
           {
@@ -583,8 +591,8 @@ const store = createStore({
                 console.log("trade with :",pairToken,)
 
             try {
-              let token0AmountFixed = 0
-              let token1AmountFixed = 0
+              let token0amountFixed = 0
+              let token1amountFixed = 0
               let wethAmountFixed = 0
               if ((tokens[0].id == CURRENT_NETWORK.BASE_TOKEN))
               {
@@ -906,8 +914,18 @@ const store = createStore({
             const token1Contract = new Contract(tokens[1].address, ABIS.ERC20, BLOCKCHAIN)
             const balanceTx3 = await token1Contract.balanceOf(pairAddress)
             let parsedBalanceTx3 = parseDecimals(parseFloat(ethers.utils.formatEther(balanceTx3)))
+
+            const parsedWithDecimals = fixBTCDecimalsMul(tokens,
+              [
+                ethers.utils.formatEther(balanceTx2),
+                ethers.utils.formatEther(balanceTx3),
+              ]
+            )
+
             console.log("token0 balance", parsedBalanceTx2)
             console.log("token1 balance", parsedBalanceTx3)
+            console.log("** ** ** token0 balance  **  **", parsedWithDecimals[0])
+            console.log("** ** ** token0 balance  **  **", parsedWithDecimals[1])
 
             resolve(newLp)
           } else {
@@ -1071,7 +1089,7 @@ const store = createStore({
         // } else {
         //   const approveTx = await daiContract.approve(
         //       CURRENT_NETWORK.ROUTER_ADDRESS,
-        //       ethers.utils.parseEther(tradeData.token0Amount)
+        //       ethers.utils.parseEther(tradeData.token0amount)
         //   );
         //   let reciept = await approveTx.wait();
         //   console.log("approveTx");
@@ -1082,22 +1100,22 @@ const store = createStore({
 
         let liquidityslipped = ethers.utils.parseEther((tradeData.liquidity * (tradeData.slippage / 100)).toString())
         let liquidity = ethers.utils.parseEther((tradeData.liquidity).toString())
-        let token0amount = ethers.utils.parseEther((tradeData.token0Amount).toString())
-        let token0amountslipped = ethers.utils.parseEther((tradeData.token0Amount * (tradeData.slippage / 100)).toFixed(17))
-        let token1amountslipped = ethers.utils.parseEther((tradeData.token1Amount * (tradeData.slippage / 100)).toFixed(17))
-        let token1amount = ethers.utils.parseEther((tradeData.token1Amount).toString())
+        let token0amount = ethers.utils.parseEther((tradeData.token0amount).toString())
+        let token0amountslipped = ethers.utils.parseEther((tradeData.token0amount * (tradeData.slippage / 100)).toFixed(17))
+        let token1amountslipped = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
+        let token1amount = ethers.utils.parseEther((tradeData.token1amount).toString())
         let dueDate2 = parseInt(Date.now() / 1000) + 1800
         console.table(
           {
             liq:(tradeData.liquidity * (tradeData.slippage / 100)),
-            token0:(tradeData.token0Amount * (tradeData.slippage / 100)),
-            token1:(tradeData.token1Amount * (tradeData.slippage / 100)),
+            token0:(tradeData.token0amount * (tradeData.slippage / 100)),
+            token1:(tradeData.token1amount * (tradeData.slippage / 100)),
           }
         )
 
 
 
-        // if (tradeData.token0Amount && tradeData.token1Amount)
+        // if (tradeData.token0amount && tradeData.token1amount)
         {
           if ((tokens[0].id == CURRENT_NETWORK.BASE_TOKEN) || (tokens[1].id == CURRENT_NETWORK.BASE_TOKEN))
           {
@@ -1221,13 +1239,13 @@ const store = createStore({
         let aSigner = await newprovider.getSigner()
         const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, zigner)
 
-        let token0amount = ethers.utils.parseEther((tradeData.token0Amount).toString())
-        let token1amount = ethers.utils.parseEther((tradeData.token1Amount * (tradeData.slippage / 100)).toFixed(17))
+        let token0amount = ethers.utils.parseEther((tradeData.token0amount).toString())
+        let token1amount = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
         let dueDate = parseInt(Date.now() / 1000) + 1800
-        console.log(`trade ${tradeData.token0Amount} ${tokens[0].id} for ${tradeData.token1Amount} ${tokens[1].id}`)
-        console.log("slippage", tradeData.slippage,"trade",tradeData.token0Amount, "for", (tradeData.token1Amount * (tradeData.slippage / 100)))
+        console.log(`trade ${tradeData.token0amount} ${tokens[0].id} for ${tradeData.token1amount} ${tokens[1].id}`)
+        console.log("slippage", tradeData.slippage,"trade",tradeData.token0amount, "for", (tradeData.token1amount * (tradeData.slippage / 100)))
 
-        if (tradeData.token0Amount && tradeData.token1Amount)
+        if (tradeData.token0amount && tradeData.token1amount)
         {
           if (tokens[0].id == CURRENT_NETWORK.BASE_TOKEN)
           {
@@ -1237,7 +1255,7 @@ const store = createStore({
                   [CURRENT_NETWORK.WETH_ADDRESS, tokens[1].address],
                   firstAddress,
                   dueDate,
-                  {value: ethers.utils.parseEther(tradeData.token0Amount)}
+                  {value: ethers.utils.parseEther(tradeData.token0amount)}
               )
               let result = await swapTx.wait()
               await context.dispatch('refreshFirstAccount')

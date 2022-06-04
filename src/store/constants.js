@@ -341,14 +341,14 @@ export const maticNetworkNew = {
       price: 0,
     },
 
-    {
-      id: 'CASH',
-      address: "0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829",
-      chainlink_address: "0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829",
-      image:
-        './res/995996.jpg',
-      price: 0,
-    },
+    // {
+    //   id: 'CASH',
+    //   address: "0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829",
+    //   chainlink_address: "0x7BFA6B8f09AED170Bff62Faf6680B7F16c9B9829",
+    //   image:
+    //     './res/999699.png',
+    //   price: 0,
+    // },
 
     {
       id: 'BTC',
