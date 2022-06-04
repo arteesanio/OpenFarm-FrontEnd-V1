@@ -54,12 +54,12 @@
                 </div>
                 
             </div>
-            <!-- <div class="my-8 flex"></div>
+            <div class="my-8 flex"></div>
             <div class="flex-between">
                 <div class="tx-xs clickable n-flat flex-align-start pa-2 border-r-10" @click="togglers.threed = !togglers.threed">
                     {{LANG.switchTo}} {{!togglers.threed ? '3D' : '2D'}}
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </template>
@@ -110,6 +110,7 @@ export default {
         first_acc()             { return this.$store.getters.first_acc },
         accs_length()           { return this.$store.getters.accs_length },
         BASE_TOKEN()            { return this.$store.getters.BASE_TOKEN },
+        BASE_USD_ID()            { return this.$store.getters.BASE_USD_ID },
 
         articles()              { return this.$store.getters.articles },
         tokens()                { return this.$store.getters.tokens },
@@ -132,6 +133,11 @@ export default {
             // {
                 this.$store.dispatch("setToken", { token, index: 0 })
             // }
+
+            if (this.tokens[1].id != this.BASE_USD_ID)
+            {
+                this.$store.dispatch("setToken", { token: this.token_list[1], index: 1 })
+            }
             // this.togglers.tokenList = false
         },
         _amISelected(id)

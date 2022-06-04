@@ -2,11 +2,11 @@
 <template>
 	<div class="flex-column flex-1 w-100"  >
         
-    	<div  class="flex-column border-r-5 pa-3 mt-2 border-r-5 n-inset" v-if="!_tradingUSDToken">
+    	<!-- <div  class="flex-column border-r-5 pa-3 mt-2 border-r-5 n-inset" v-if="!_tradingUSDToken">
         	<div class="flex">
         		<span v-if="!loading" class="tx-primary  opacity-50">NO SELF LIQUIDITY</span>
     		</div>
-    	</div>
+    	</div> -->
     	<div  class="flex-column pt-0 pa-3 mt-2 border-r-5" v-if="_tradingUSDToken">
         	<div class="flex">
 	        	<div v-if="!hasLpBalance && !loading">

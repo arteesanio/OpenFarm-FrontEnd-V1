@@ -181,7 +181,7 @@
     import tokenInput from "../components/token-input.vue";
     import settings from "../modules/settings.vue";
     import liquidity from "../modules/liquidity.vue";
-    import markets from "../components/markets.vue";
+    import markets from "../modules/markets.vue";
     import farms from "../modules/farms.vue";
 
 	export default {   
