@@ -2,7 +2,7 @@
 <template>
 	<div class="flex-column flex-1 w-100"  >
         
-    	<div  class="flex-column pt-0 pa-3 mt-2 border-r-5" >
+    	<div  class="flex-column pt-0 pa-3 mt-2 border-r-5" v-if="_tradingUSDToken">
         	<div class="flex">
 	        	<div v-if="!hasLpBalance && !loading">
 		        	<div class=" my-2 border-r-15 flex-column letter-s-3 py-1 px-3 tx-success clickable opacity-hover-75 n-flat mx-2" 
@@ -22,7 +22,7 @@
 		        </div>
 	        </div>
 
-        	<div class="flex">
+        	<div class="flex" >
 	        	<details v-if="!currentLp && togglers.createPair">
 					<summary class="mt-2 clickable opacity-hover-50 tx-xs letter-s-3">Handle Null Pairs</summary>
 					<div>
@@ -37,7 +37,7 @@
 				</details>
 	        </div>
 
-        	<div v-if="currentLp">
+        	<div v-if="currentLp ">
 				<!-- <span class="mt-2 clickable opacity-hover-50 tx-xs letter-s-3">{{LANG.manage}} {{LANG.liquiditys}}</span> -->
         		<div class=" ma-2 border-r-25">
 
@@ -201,7 +201,8 @@
         LANG()                  { return this.$store.getters.LANG },
         first_acc()         	{ return this.$store.getters.first_acc },
         accs_length()           { return this.$store.getters.accs_length },
-        
+
+        BASE_USD_ID()            { return this.$store.getters.BASE_USD_ID },
         BASE_TOKEN()            { return this.$store.getters.BASE_TOKEN },
 	    token_list() {
 	      return this.$store.getters.token_list;
@@ -241,6 +242,9 @@
 	        },
 	        _tradingBaseToken() {
 	        	return this.tokens[0].id == this.BASE_TOKEN || this.tokens[1].id == this.BASE_TOKEN
+	        },
+	        _tradingUSDToken() {
+	      	return this.tokens[0].id == this.BASE_USD_ID || this.tokens[1].id == this.BASE_USD_ID
 	        },
     	},
 	  methods: {
@@ -333,7 +337,7 @@
                 if (this.loading) { return }
                 if (!this.hasFirstTokenAllowance) { return }
                 if (!this.hasSecondTokenAllowance) { return }
-				if (this.tokenInputs.token0Amount < 0.000001 || this.tokenInputs.token1Amount < 0.000001) { return alert("too low")}
+				// if (this.tokenInputs.token0Amount < 0.000001 || this.tokenInputs.token1Amount < 0.000001) { return alert("too low er")}
                 this.loading = true
 				let trade = {token0Amount: this.tokenInputs.token0Amount, token1Amount: this.tokenInputs.token1Amount, slippage: parseFloat(this.form.slippage)}
             	const action = "addLiquidity"
@@ -350,7 +354,7 @@
 
                 if (this.loading) { return }
                 if (!this.hasLpBalance) { return }
-				if (this.tokenInputs.token0Amount < 0.000001 || this.tokenInputs.token1Amount < 0.000001) { return alert("too low")}
+				if (this.tokenInputs.token0Amount < 0.000001 || this.tokenInputs.token1Amount < 0.000001) { return alert("too low ass")}
                 this.loading = true
 				let trade = {liquidity: this.form.exitLiquidity, token0Amount: this.token0Amount, token1Amount: this.token1Amount, slippage: parseFloat(this.form.slippage)}
           		// console.log("exhange??");

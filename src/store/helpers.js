@@ -84,12 +84,22 @@ export const isMetaMaskInstalled = () => {
 };
 
 export const parseDecimals = (x) => {
-  if (typeof x.toString == "function" && x.toString() ==
-      "115792089237316195423570985008687907853269984665640564039457.584007913129639935")
+  if (typeof x.toString == "function" &&
+      (
+        x.toString() == "115792089237316195423570985008687907853269984665640564039457.584007913129639935" || 
+        x.toString() == "115792089237316195423570985008687907853269984665640564039456.924007913129639905" || 
+        x.toString() == "1.157920892373162e+59"
+      )
+     )
     { return 666.666 }
   if (x == 0) return 0
+  if (x < 0.000001)
+  {
+    return 0
+  }
   if (x < 0.00001)
   {
+    console.log("*number* TOO LOW", x)
     return x.toFixed(8)
   }
   if (x < 0.0001)

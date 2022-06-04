@@ -13,7 +13,7 @@
                 </span>
             </div>
         <!-- </div> -->
-        <div v-if="togglers.advanced" class="flex-column flex-justify-start pt-8 " style="min-height: 600px">
+        <div v-if="togglers.advanced" class="flex-column flex-justify-start pt-8 " >
             
             <div class="flex-column">
                     <div class="flex-row">
@@ -30,21 +30,56 @@
                         <input type="text" v-model="form.newFarm"   class=" tx-primary n-flat ma-3" placeholder="address">
                         <input type="text" v-model="form.newFarmAlloc"   class=" tx-primary n-flat ma-3" placeholder="Alloc">
                     </div>
+                    <!-- <hr class="opacity-10 w-100" /> -->
                     <div class="flex-row">
                     
                             <div class="clickable n-flat opacity-hover-50 pa-2 ma-2" @click="addFarm">
                                 Add Farm
                             </div>
                     </div>
-                    <hr class="opacity-10 w-100" />
             </div>
+        <div v-if="togglers.advanced" class="flex-column flex-justify-start pt-8 " >
+            
+            <div class="flex-column">
+                    <hr class="opacity-10 w-100" />
+                    <div class="flex-row">
+                            <div class="clickable n-flat opacity-hover-50 pa-2 ma-2" @click="removeAllowance">
+                                Remove allowance of
+                            </div>
+                            <div class="clickable n-flat opacity-hover-50 pa-2 ma-2" @click="giveAllowance">
+                                approve allowance to
+                            </div>
+
+                            <div class="clickable n-flat opacity-hover-50 pa-2 ma-2" @click="getAllowance">
+                                get allowance of
+                                <!-- {{theAllowanceNumber}} -->
+                            </div>
+                    </div>
+                    <div class="flex-column">
+
+                        <input type="text" v-model="form.tokenOfallowance"   class=" tx-primary n-flat ma-3" placeholder="token of allowance">
+                        <input type="text" v-model="form.allowanceAddress"   class=" tx-primary n-flat ma-3" placeholder="allowance address">
+                        {{theAllowanceNumber}}
+                    </div>
+                    <div class="flex-column" v-if="!!theAllowanceNumber">
+                        {{parseDecimals(theAllowanceNumber)}}
+                    </div>
+            </div>
+        </div>
             <div class="flex-column">
                     <div class="flex-column tx-xs ">
+                        <span>USD:{{CURRENT_NETWORK.BASE_USD_ADDRESS}}</span>
+                    <hr class="opacity-10 w-100" />
+
+                        <span>BANK:{{CURRENT_NETWORK.FACTORY_ADDRESS}}</span>
+                        <span>CONTROLLER:{{CURRENT_NETWORK.ROUTER_ADDRESS}}</span>
                         <span>CASH:{{CURRENT_NETWORK.FRUIT_ADDRESS}}</span>
                         <span>BOND:{{CURRENT_NETWORK.SEED_ADDRESS}}</span>
                         <span>PRINTER:{{CURRENT_NETWORK.MASTERCHEF_ADDRESS}}</span>
                         <span>transferOwnership</span>
                         <span>to masterchef printer</span>
+                        
+                        0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6
                     </div>
                     <div class="w-50">
                         <input type="text" v-model="form.contractAbi"       class=" tx-primary n-flat ma-3" placeholder="abi">
@@ -68,6 +103,7 @@
 <script>
     import { ethers, Contract }  from 'ethers';
     import { ABIS, CURRENT_NETWORK } from '../store/constants';
+    import { parseDecimals, ERROR_HELPER, shortAddress } from '../store/helpers';
     import newItem from "../components/new-item.vue";
     import farmItem from "../components/farm-item.vue";
 
@@ -85,8 +121,10 @@
                 togglers: {
                     advanced: false,
                 },
-
+theAllowanceNumber: "",
                 form: {
+                    tokenOfallowance: "",
+                    allowanceAddress: "",
                     poolLpInputs: {},
                     newFarm: "",
                     newFarmAlloc: "",
@@ -118,6 +156,7 @@
             retrieved_pool_length() { return this.$store.getters.retrieved_pool_length },
 		},
 		methods: {
+            parseDecimals,
             isFarmStake(poolLp)
             {
                 return CURRENT_NETWORK.FRUIT_ADDRESS.toUpperCase() == this.pools[poolLp].lpToken.toUpperCase()
@@ -135,6 +174,53 @@
                 this.loading = true
                 await this.$store.dispatch("refreshFarms")
                 this.loading = false
+            },
+            async giveAllowance()
+            {
+
+
+                let firstAddress = this.first_acc.address
+                const BLOCKCHAIN = this.$store.getters.newProvider
+                const USER_WALLET = await BLOCKCHAIN.getSigner()
+                let giverAddress = this.form.tokenOfallowance
+                const tokenContract = new Contract(giverAddress, ABIS.FRUIT, USER_WALLET)
+
+                console.log("giveAllowance . . .")
+                try {
+                    let transaction = await tokenContract.approve(this.form.allowanceAddress, ethers.constants.MaxUint256.toString())
+                    // let transaction = await fruitContract[this.form.functionName](this.form.arg1, ethers.constants.MaxUint256.toString())
+                    await transaction.wait()
+                    alert("done")
+                } catch (error)
+                {
+                    console.log("***error!!!")
+                    console.log(error)
+                }
+            },
+            async getAllowance()
+            {
+                let firstAddress = this.first_acc.address
+                const BLOCKCHAIN = this.$store.getters.newProvider
+                const USER_WALLET = await BLOCKCHAIN.getSigner()
+                console.log("getAllowance . . .")
+                console.log(this.form.tokenOfallowance, this.form.allowanceAddress)
+
+                let giverAddress = this.form.tokenOfallowance
+                const tokenContract = new Contract(giverAddress, ABIS.FRUIT, USER_WALLET)
+
+                try {
+                    let getbalance = await tokenContract.balanceOf(firstAddress)
+                    console.log("ethers.utils.formatEther(getbalance)", ethers.utils.formatEther(getbalance))
+                    let transaction = await tokenContract.allowance(firstAddress, this.form.allowanceAddress)
+                    // let transaction = await fruitContract[this.form.functionName](this.form.arg1, ethers.constants.MaxUint256.toString())
+                    // await transaction.wait()
+                    let allowanceNumber = ethers.utils.formatEther(transaction)
+                    this.theAllowanceNumber = allowanceNumber
+                } catch (error)
+                {
+                    console.log("***error!!!")
+                    console.log(error)
+                }
             },
             async addFarm()
             {

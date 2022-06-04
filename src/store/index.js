@@ -15,6 +15,7 @@ const store = createStore({
       ethereum: window.ethereum,
       isMetaMaskInstalled: isMetaMaskInstalled(),
       BASE_TOKEN: CURRENT_NETWORK.BASE_TOKEN,
+      BASE_USD_ID: CURRENT_NETWORK.BASE_USD_ID,
 
       lps: {},
       pools: {},
@@ -238,7 +239,7 @@ const store = createStore({
             lastRewardBlock: parseInt(thePoolData.lastRewardBlock.toString()),
             accCashPerShare: parseDecimals(parseFloat(ethers.utils.formatEther(thePoolData.accCashPerShare))),
 
-            allowance: parseDecimals(ethers.utils.formatEther(chefAllowance)),
+            allowance: parseDecimals(parseFloat(ethers.utils.formatEther(chefAllowance))),
             pendingCash: parseDecimals(parseFloat(ethers.utils.formatEther(pendingCash))),
 
             amount: parseDecimals(parseFloat(ethers.utils.formatEther(theUserInfo.amount))),
@@ -412,7 +413,7 @@ const store = createStore({
             {
 
               const userAllowance = await tokenContract.allowance(firstAddress, CURRENT_NETWORK.ROUTER_ADDRESS)
-              PARSED_userAllowance = parseDecimals(ethers.utils.formatEther(userAllowance))
+              PARSED_userAllowance = parseDecimals(parseFloat(ethers.utils.formatEther(userAllowance)))
               // newAccount.allowances[tokens[i].address] = PARSED_userAllowance
 
               context.commit(
@@ -420,7 +421,7 @@ const store = createStore({
                 {
                   address: firstAddress,
                   tokenAddress: tokens[i].address,
-                  allowance: parseFloat(PARSED_userAllowance),
+                  allowance: PARSED_userAllowance,
                 }
               )
             }
@@ -443,11 +444,47 @@ const store = createStore({
 
       return new Promise(async (resolve, reject) => {
         // console.log([CURRENT_NETWORK.BASE_USD_ADDRESS, CURRENT_NETWORK.WETH_ADDRESS])
+        console.log(`getTradeData getAmountsOut ${CURRENT_NETWORK.WETH_ADDRESS} ${CURRENT_NETWORK.BASE_USD_ADDRESS}`)
+        // const baseAmountsOut = await routerContract.getAmountsOut(oneEther, [CURRENT_NETWORK.WETH_ADDRESS, CURRENT_NETWORK.BASE_USD_ADDRESS]);
+        // const _parsedBasePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
+        // const basePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
+        // context.commit("updateTokenPriceAt", {index: 0, price: parseDecimals(basePrice)})
+        // console.log(`getTradeData baseprice ${basePrice} ${typeof basePrice}`)
+        const amountIn = ethers.utils.parseEther(tradeData.token0Amount);
+        const amountInFloat = parseFloat(tradeData.token0Amount);
+
+        if (tokens[0].id != CURRENT_NETWORK.BASE_USD_ID && tokens[1].id != CURRENT_NETWORK.BASE_USD_ID )
+        {
+          const amountsresult = await routerContract.getAmountsOut(amountIn, [tokens[0].address, CURRENT_NETWORK.BASE_USD_ADDRESS ,tokens[1].address])
+            // console.log(ethers.utils.formatEther(amountsresult[0]), ethers.utils.formatEther(amountsresult[1]))
+          const __parsedAmountResult1 = parseFloat(ethers.utils.formatEther(amountsresult[2]))
+          resolve(parseDecimals(__parsedAmountResult1))
+        } else {
+          const amountsresult = await routerContract.getAmountsOut(amountIn, [tokens[0].address, tokens[1].address]);
+          const __parsedAmountResult1 = parseFloat(ethers.utils.formatEther(amountsresult[1]))
+          console.log(ethers.utils.formatEther(amountsresult[0]), ethers.utils.formatEther(amountsresult[1]))
+          resolve(parseDecimals(__parsedAmountResult1))
+        }
+      })
+    },
+
+    _getTradeData: async (context, tradeData) =>
+    {
+      const firstAddress = context.getters.first_acc.address
+      const tokens = context.getters.tokens
+      const token_list = context.getters.token_list
+      const BLOCKCHAIN = context.getters.newProvider
+      const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, BLOCKCHAIN)
+      const oneEther = ethers.utils.parseUnits('1', 18)
+
+      return new Promise(async (resolve, reject) => {
+        // console.log([CURRENT_NETWORK.BASE_USD_ADDRESS, CURRENT_NETWORK.WETH_ADDRESS])
+        console.log(`getTradeData getAmountsOut ${CURRENT_NETWORK.WETH_ADDRESS} ${CURRENT_NETWORK.BASE_USD_ADDRESS}`)
         const baseAmountsOut = await routerContract.getAmountsOut(oneEther, [CURRENT_NETWORK.WETH_ADDRESS, CURRENT_NETWORK.BASE_USD_ADDRESS]);
         const _parsedBasePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
         const basePrice = parseFloat(ethers.utils.formatEther(baseAmountsOut[1]))
         // context.commit("updateTokenPriceAt", {index: 0, price: parseDecimals(basePrice)})
-        console.log(`baseprice ${basePrice} ${typeof basePrice}`)
+        console.log(`getTradeData baseprice ${basePrice} ${typeof basePrice}`)
         const amountIn = ethers.utils.parseEther(tradeData.token0Amount);
         const amountInFloat = parseFloat(tradeData.token0Amount);
 
@@ -514,6 +551,17 @@ const store = createStore({
       const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, USER_WALLET)
 
       return new Promise(async (resolve, reject) => {
+        if (tokens[0].id == "BTC")
+        {
+          tradeData.token0Amount = parseFloat(tradeData.token0Amount) / (10 ** 10)
+        }
+        if (tokens[1].id == "BTC")
+        {
+          tradeData.token1Amount = parseFloat(tradeData.token1Amount) / (10 ** 10)
+        }
+        console.table("add liquidity")
+        console.table(tradeData)
+
         let token0amountslipped = ethers.utils.parseEther((tradeData.token0Amount * (tradeData.slippage / 100)).toFixed(17))
         let token1amountslipped = ethers.utils.parseEther((tradeData.token1Amount * (tradeData.slippage / 100)).toFixed(17))
         let token0amount = ethers.utils.parseEther((parseFloat(tradeData.token0Amount).toFixed(17)).toString())
@@ -526,11 +574,13 @@ const store = createStore({
         {
           if ((tokens[0].id == CURRENT_NETWORK.BASE_TOKEN) || (tokens[1].id == CURRENT_NETWORK.BASE_TOKEN))
           {
+                console.log("trade with base token:",CURRENT_NETWORK.BASE_TOKEN,)
             let pairToken = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? tokens[1] : tokens[0]
             let tokenAmount = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token1amount : token0amount
             let tokenAmountslipped = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token1amountslipped : token0amountslipped
             let wethAmount = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token0amount : token1amount
             let wethAmountslipped = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token0amountslipped : token1amountslipped
+                console.log("trade with :",pairToken,)
 
             try {
               let token0AmountFixed = 0
@@ -542,6 +592,15 @@ const store = createStore({
               } else {
                 wethAmountFixed = wethAmount
               }
+              console.log("add liquidity with base token")
+
+                console.log("pairToken.address,", pairToken.address)
+                console.log("tokenAmount,", tokenAmount)
+                console.log("tokenAmountslipped,", tokenAmountslipped)
+                console.log("wethAmountslipped,", wethAmountslipped)
+                console.log("firstAddress,", firstAddress)
+                console.log("dueDate2,", dueDate2)
+                console.log("{value: wethAmountFixed}", wethAmountFixed)
               const swapTx = await routerContract.addLiquidityETH(
                 pairToken.address,
                 tokenAmount,
@@ -562,18 +621,25 @@ const store = createStore({
 
             let token0 = tokens[0]
             let token1 = tokens[1]
-            let token0Amount = token0amount
-            let token1Amount = token1amount
-            let token0Amountslipped = token0amountslipped
-            let token1Amountslipped = token1amountslipped
+
+
+                console.log("add liquidity with non base token")
+                console.log("token0.address,",token0.address)
+                console.log("token1.address,",token1.address)
+                console.log("token0amount,",token0amount)
+                console.log("token1amount,",token1amount)
+                console.log("token0amountslipped,",token0amountslipped)
+                console.log("token1amountslipped,",token1amountslipped)
+                console.log("firstAddress,",firstAddress)
+                console.log("dueDate2,",dueDate2)
 
             const swapTx = await routerContract.addLiquidity(
                 token0.address,
                 token1.address,
-                token0Amount,
-                token1Amount,
-                token0Amountslipped,
-                token1Amountslipped,
+                token0amount,
+                token1amount,
+                token0amountslipped,
+                token1amountslipped,
                 firstAddress,
                 dueDate2,
             ).then(async (res) => {
@@ -745,6 +811,7 @@ const store = createStore({
         {
           let pairToken = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? tokens[1] : tokens[0]
           const pairAddress = await factoryContract.getPair(pairToken.address, CURRENT_NETWORK.WETH_ADDRESS)
+          console.log(`getLiquidity getPair ${CURRENT_NETWORK.WETH_ADDRESS} ${pairToken.address}`)
           const lpContract = new Contract(pairAddress, ABIS.PAIR, BLOCKCHAIN)
           console.log(`*getting pair address. . .`)
 
@@ -1289,6 +1356,9 @@ const store = createStore({
 
     BASE_TOKEN(state) {
       return state.BASE_TOKEN
+    },
+    BASE_USD_ID(state) {
+      return state.BASE_USD_ID
     },
     eth(state) {
       return state.ethereum

@@ -17,7 +17,7 @@
         </div>
 
         <!-- <farms v-if="accs_length" /> -->
-        <tx-maker v-if="accs_length" />
+        <!-- <tx-maker v-if="accs_length" /> -->
 
     </div>
 </template>

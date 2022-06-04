@@ -1,4 +1,4 @@
-<template>
+    <template>
     <div class="mx-2 my-1 border-r-25 n-flat flex-column pt-2">
         <!-- <span v-if="accs_length && !parentload && !_invalidInputAmount"
             @click="inputAmount = ''"
@@ -6,14 +6,24 @@
         >
             {{LANG.clear}}
         </span> -->
+      <!-- <span
+        class="clickable tx-secondary tx-xs opacity-hover-75 py-1"
+        @click="approve" 
+        v-if="accs_length &&
+              BASE_TOKEN != token.id &&
+              !first_acc.allowances[token.address] &&
+              index == 0"
+      >
+        Accept TOS
+      </span> -->
 
-      <span
+      <!-- <span
         class="tx-secondary tx-xs opacity-hover-75"
         v-if="accs_length && first_acc.allowances[token.address]"
       >
         allow: 
         {{first_acc.allowances[token.address]}}
-      </span>
+      </span> -->
       
         <input v-model="inputAmount" placeholder="0.0" type="text" name="amount" style="max-width: 110px;"
             class="opacity-hover-75 border-r-5 px-2 tx-right n-tx mt-0 ma-3 n-inset tx-lg noborder"
@@ -99,6 +109,20 @@ export default {
             // let result = await this.$store.dispatch("refreshFirstAccount", true)
             // this.loading = false
         },
+
+
+        async approve(token) {
+            this.$parent.loading = true;
+// 
+            let result = await this.$store.dispatch("approve", { token: this.token, index: this.index })
+            .then(async (res) => {
+                console.log("a res!", res);
+            }).catch((err) => {
+                console.log("failed something", err);
+            })
+// 
+            this.$parent.loading = false;
+        },
     },
     watch: {
         inputAmount(newVal, oldVal)
@@ -126,29 +150,3 @@ export default {
           <!-- <small class="tx-xs">{{atoken.id}}</small> -->
 
       <!-- <small class=" opacity-75 letter-s-5 mt-3" :class="[!!index ? 'tx-primary' : 'tx-secondary']">{{ LANG[["from","to"][index]]}}</small> -->
-
-
-      <!-- <span
-        class="clickable tx-secondary tx-xs opacity-hover-75 py-1"
-        @click="approve" 
-        v-if="accs_length &&
-              BASE_TOKEN != token.id &&
-              !first_acc.allowances[token.address] &&
-              index == 0"
-      >
-        Accept TOS
-      </span> -->
-
-    <!--   
-        // async approve(token) {
-        //     this.$parent.loading = true;
-
-        //     let result = await this.$store.dispatch("approve", { token: this.token, index: this.index })
-        //     .then(async (res) => {
-        //         console.log("a res!", res);
-        //     }).catch((err) => {
-        //         console.log("failed something", err);
-        //     })
-
-        //     this.$parent.loading = false;
-        // }, -->
