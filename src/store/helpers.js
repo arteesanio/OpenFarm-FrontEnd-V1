@@ -47,8 +47,8 @@ export const fixBTCDecimalsMul = (_tokens, _tradeData) =>
   // console.log(tradeData)
   // console.log("_tradeData***")
   return [
-   tradeData[0],
-   tradeData[1],
+   parseFloat(tradeData[0]),
+   parseFloat(tradeData[1]),
   ]
 };
 export const fixBTCDecimalsDiv = (_tokens, _tradeData) =>

@@ -37,7 +37,7 @@
 		    		{{LANG.help_inputAmount}}
 		    	</span> -->
 		        <token-input ref="token0ref" :index="0" :token="tokens[0]" :parentload="loading"
-		        	@updateInputAmount="token0amount = $event"
+		        	@updateInputAmount="__updateTokenInput(0, $event)"
 	        	/>
 		        <div class="flex-column">
 		        	<!-- <div v-if="accs_length && !loading" @click="editConfig"
@@ -78,7 +78,7 @@
 		        	</span>
 		        </div>
 		        <token-input ref="token1ref" :index="1" :token="tokens[1]" :parentload="loading"
-		        	@updateInputAmount="token1amount = $event"
+		        	@updateInputAmount="__updateTokenInput(1, $event)"
 	        	/>
 				<div v-if="accs_length" class="w-100 flex-column">
 		        	<!-- <hr class="w-50 opacity-5"> -->
@@ -252,6 +252,11 @@
 	        },
 		},
 		methods: {
+			__updateTokenInput(index, data) {
+				this[`token${index}amount`] = data
+				// this.$refs.liquidity
+				// index
+			},
 			async approveToken0() {
                 if (this.loading) { return }
                 this.loading = true

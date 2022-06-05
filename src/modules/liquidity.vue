@@ -48,9 +48,9 @@
 
 		        	<div class="flex-row">
 		        		<div class="flex-column pa-2 n-flat border-r-15">
-		        			<div class="tx-xs tx-primary">{{tokenInputs.token0Amount}} {{tokens[0].id}}</div>
-		        			<div class="tx-xs tx-secondary">{{tokenInputs.token1Amount}} {{tokens[1].id}}</div>
-		        			<!-- <div class="tx-xs tx-secondary">Min: {{parseDecimals(tokenInputs.token1Amount * form.slippage / 100)}}</div> -->
+		        			<div class="tx-xs tx-primary">{{tokenInputs.token0amount}} {{tokens[0].id}}</div>
+		        			<div class="tx-xs tx-secondary">{{tokenInputs.token1amount}} {{tokens[1].id}}</div>
+		        			<!-- <div class="tx-xs tx-secondary">Min: {{parseDecimals(tokenInputs.token1amount * form.slippage / 100)}}</div> -->
 
 				        	<div class="flex-around w-100 ">
 				        		
@@ -342,9 +342,9 @@
                 if (this.loading) { return }
                 if (!this.hasFirstTokenAllowance) { return }
                 if (!this.hasSecondTokenAllowance) { return }
-				// if (this.tokenInputs.token0Amount < 0.000001 || this.tokenInputs.token1Amount < 0.000001) { return alert("too low er")}
+				// if (this.tokenInputs.token0amount < 0.000001 || this.tokenInputs.token1amount < 0.000001) { return alert("too low er")}
                 this.loading = true
-				let trade = {token0Amount: this.tokenInputs.token0Amount, token1Amount: this.tokenInputs.token1Amount, slippage: parseFloat(this.form.slippage)}
+				let trade = {token0amount: this.tokenInputs.token0amount, token1amount: this.tokenInputs.token1amount, slippage: parseFloat(this.form.slippage)}
             	const action = "addLiquidity"
 	            try {
 					let result = await this.$store.dispatch(action, trade)
@@ -359,11 +359,11 @@
 
                 if (this.loading) { return }
                 if (!this.hasLpBalance) { return }
-				if (this.tokenInputs.token0Amount < 0.000001 || this.tokenInputs.token1Amount < 0.000001) { return alert("too low ass")}
+				if (this.tokenInputs.token0amount < 0.000001 || this.tokenInputs.token1amount < 0.000001) { return alert("too low ass")}
                 this.loading = true
-				let trade = {liquidity: this.form.exitLiquidity, token0Amount: this.token0Amount, token1Amount: this.token1Amount, slippage: parseFloat(this.form.slippage)}
+				let trade = {liquidity: this.form.exitLiquidity, token0amount: this.token0amount, token1amount: this.token1amount, slippage: parseFloat(this.form.slippage)}
           		// console.log("exhange??");
-				// this.$store.dispatch("newTrade", {token0Amount: this.token0Amount, token1Amount: this.token1Amount})
+				// this.$store.dispatch("newTrade", {token0amount: this.token0amount, token1amount: this.token1amount})
 				let result = await this.$store.dispatch("removeLiquidity", trade )
 				.then((res) => {
 					console.log("succesfull trade: thereceipt", res)

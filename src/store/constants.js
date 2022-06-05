@@ -159,6 +159,7 @@ export const ABIS = {
 
 
 export const bscNetwork = {
+  SCANNER_URL: 'https://bscscan.com',
   RPC_URL: 'https://bsc-dataseed1.binance.org',
   ROUTER_ADDRESS: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
   FACTORY_ADDRESS: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
@@ -235,6 +236,7 @@ export const bscNetwork = {
 };
 
 export const maticNetwork = {
+  SCANNER_URL: 'https://polygonscan.com',
   RPC_URL: 'https://bsc-dataseed1.binance.org',
   ROUTER_ADDRESS: '0x0069E50350FABf3A207AefBDd10537F8d03B631a',
   FACTORY_ADDRESS: '0x51aEaC52520A583151325D27D66E9295e8CCb810',
@@ -294,6 +296,7 @@ export const maticNetwork = {
   ],
 };
 export const maticNetworkNew = {
+  SCANNER_URL: 'https://polygonscan.com',
   RPC_URL: 'https://bsc-dataseed1.binance.org',
 
   FACTORY_ADDRESS: '0xc839E118d37CFEF20fc6f439F50ee3B3a7656F6f',
@@ -371,6 +374,8 @@ export const maticNetworkNew = {
 
 // init hash code - 0x8415a681423c31e5a24dcd0ee281f8837ccc5f7848784fe79002602bb75365de
 export const ftmNetwork = {
+  SCANNER_URL: 'https://ftmscan.com',
+
   RPC_URL: 'https://rpcapi.fantom.network/',
   ROUTER_ADDRESS: '0x686ae4038f98153D83CB6F44A069DC839D847CAB',
   FACTORY_ADDRESS: '0x612f8359C4B9191B10Ae134ff0eAFBEDBC068a98',
@@ -447,6 +452,7 @@ export const ftmNetwork = {
 };
 
 export const localNetwork = {
+  SCANNER_URL: 'http://localhost:8545/address',
   RPC_URL: 'http://localhost:8545',
   ROUTER_ADDRESS: '0x565d4Ec2aB22e5e686Ae029aD2Ea6d36C6F28281',
   FACTORY_ADDRESS: '0xD704cED92Cc82D05D932364459EF14C1Dc5D9d61',

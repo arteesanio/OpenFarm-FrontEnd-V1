@@ -34,9 +34,9 @@
 	        		</small>
 	        		<b class="tx-xs">{{ BASE_TOKEN }} Balance: <span class="tx-lg">{{first_acc.balance}}</span></b>
 	        	</small>
-	        	<div>
+	        	<div v-if="first_acc">
 		        	<a class="  letter-s-3 py-1 px-3 tx-secondary clickable opacity-hover-75 x-2 flex tx-sm nodeco" 
-		            	href="https://ftmscan.com/" target="_blank" 
+		            	:href="SCANNER+'/address/'+first_acc.address" target="_blank" 
 		            >
 		            	<span>My Account</span>
 		            	<i class="fas fa-external-link-alt ml-1"></i>
@@ -80,6 +80,7 @@
         first_acc()         	{ return this.$store.getters.first_acc },
         accs_length()           { return this.$store.getters.accs_length },
         
+        SCANNER()            	{ return this.$store.getters.SCANNER },
         BASE_TOKEN()            { return this.$store.getters.BASE_TOKEN },
 	    token_list() {
 	      return this.$store.getters.token_list;

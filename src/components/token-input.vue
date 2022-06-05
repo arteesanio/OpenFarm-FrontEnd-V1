@@ -127,6 +127,7 @@ export default {
     watch: {
         inputAmount(newVal, oldVal)
         {
+            // console.log("***inputAmount*** watching", this.token, newVal)
             this.$emit("updateInputAmount", newVal)
         },
     },

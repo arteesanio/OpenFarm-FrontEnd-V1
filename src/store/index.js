@@ -15,6 +15,7 @@ const store = createStore({
 
       ethereum: window.ethereum,
       isMetaMaskInstalled: isMetaMaskInstalled(),
+      SCANNER: CURRENT_NETWORK.SCANNER_URL,
       BASE_TOKEN: CURRENT_NETWORK.BASE_TOKEN,
       BASE_USD_ID: CURRENT_NETWORK.BASE_USD_ID,
 
@@ -608,58 +609,88 @@ const store = createStore({
       const BLOCKCHAIN = context.getters.newProvider
       const USER_WALLET = await BLOCKCHAIN.getSigner()
       const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, USER_WALLET)
-      const tradeData = parseTradeDataTokenAmounts(tokens, _tradeData)
+      // const tradeData = parseTradeDataTokenAmounts(tokens, _tradeData)
       return new Promise(async (resolve, reject) => {
-        if (tokens[0].id == "BTC")
-        {
-          tradeData.token0amount = parseFloat(tradeData.token0amount) / (10 ** 10)
+        // if (tokens[0].id == "BTC")
+        // {
+        //   tradeData.token0amount = parseFloat(tradeData.token0amount) / (10 ** 10)
+        // }
+        // if (tokens[1].id == "BTC")
+        // {
+        //   tradeData.token1amount = parseFloat(tradeData.token1amount) / (10 ** 10)
+        // }
+        // console.table("add liquidity")
+        // console.table(tradeData)
+        console.log(`addLiquidity -> ${_tradeData.token0amount} <${tokens[0].id}>s and ? ${_tradeData.token1amount} <${tokens[1].id}>s . . .`)
+        const tradeDataParsedd = fixBTCDecimalsDiv(tokens, [_tradeData.token0amount, _tradeData.token1amount])
+        const tradeData = {
+          slippage: _tradeData.slippage,
+          token0amount: tradeDataParsedd[0],
+          token1amount: tradeDataParsedd[1],
         }
-        if (tokens[1].id == "BTC")
-        {
-          tradeData.token1amount = parseFloat(tradeData.token1amount) / (10 ** 10)
-        }
-        console.table("add liquidity")
-        console.table(tradeData)
+        // console.log("tradeData.token0amount", typeof tradeData.token0amount,":" , tradeData.token0amount)
+        // console.log("tradeData.token1amount", typeof tradeData.token1amount,":" , tradeData.token1amount)
 
         let token0amountslipped = ethers.utils.parseEther((tradeData.token0amount * (tradeData.slippage / 100)).toFixed(17))
         let token1amountslipped = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
         let token0amount = ethers.utils.parseEther((parseFloat(tradeData.token0amount).toFixed(17)).toString())
         let token1amount = ethers.utils.parseEther((parseFloat(tradeData.token1amount).toFixed(17)).toString())
         let dueDate2 = parseInt(Date.now() / 1000) + 1800
-        console.log(`add liquidity ${tradeData.token0amount} ${tokens[0].id} for ${tradeData.token1amount} ${tokens[1].id}`)
-        console.log("slippage", tradeData.slippage,"trade",tradeData.token0amount, "for", (tradeData.token1amount * (tradeData.slippage / 100)))
+        console.log(`. . .1/4 parsed values`)
+        console.table(
+        {
+          // token0amountslipped,
+          token0amountslipped_VALUE: (tradeData.token0amount * (tradeData.slippage / 100)).toFixed(17),
+          // token1amountslipped,
+          token1amountslipped_VALUE: (tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17),
+          // token0amount,
+          token0amount_VALUE: (parseFloat(tradeData.token0amount).toFixed(17)).toString(),
+          // token1amount,
+          token1amount_VALUE: (parseFloat(tradeData.token1amount).toFixed(17)).toString(),
+        })
+        console.log(". . .2/4. slippage", tradeData.slippage)
 
         if (tradeData.token0amount && tradeData.token1amount)
         {
           if ((tokens[0].id == CURRENT_NETWORK.BASE_TOKEN) || (tokens[1].id == CURRENT_NETWORK.BASE_TOKEN))
           {
-                console.log("trade with base token:",CURRENT_NETWORK.BASE_TOKEN,)
+            console.log(". . .3/4. add Liquidity to BASE_TOKEN", CURRENT_NETWORK.BASE_TOKEN)
+            // console.log("trade with base token:",CURRENT_NETWORK.BASE_TOKEN,)
             let pairToken = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? tokens[1] : tokens[0]
             let tokenAmount = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token1amount : token0amount
             let tokenAmountslipped = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token1amountslipped : token0amountslipped
             let wethAmount = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token0amount : token1amount
             let wethAmountslipped = tokens[0].id == CURRENT_NETWORK.BASE_TOKEN ? token0amountslipped : token1amountslipped
-                console.log("trade with :",pairToken,)
+            console.table({
+              pairToken: pairToken.address,
+              tokenAmount: ethers.utils.formatEther(tokenAmount),
+              tokenAmountslipped: ethers.utils.formatEther(tokenAmountslipped),
+              wethAmount: ethers.utils.formatEther(wethAmount),
+              wethAmountslipped: ethers.utils.formatEther(wethAmountslipped),
+            })
+            console.log(". . .3/4. also add Liquidity to token:",pairToken)
+            // console.log("trade with :",pairToken,)
 
             try {
-              let token0amountFixed = 0
-              let token1amountFixed = 0
-              let wethAmountFixed = 0
-              if ((tokens[0].id == CURRENT_NETWORK.BASE_TOKEN))
-              {
-                wethAmountFixed = wethAmountslipped
-              } else {
-                wethAmountFixed = wethAmount
-              }
-              console.log("add liquidity with base token")
+              // let tokenamountFixed = 0
+              // let wethAmountFixed = 0
+              // if (tokens[0].id == CURRENT_NETWORK.BASE_TOKEN)
+              // {
+              //   wethAmountFixed = wethAmountslipped
+              // } else {
+              //   wethAmountFixed = wethAmount
+              // }
+              // console.log("add liquidity with base token")
 
-                console.log("pairToken.address,", pairToken.address)
-                console.log("tokenAmount,", tokenAmount)
-                console.log("tokenAmountslipped,", tokenAmountslipped)
-                console.log("wethAmountslipped,", wethAmountslipped)
-                console.log("firstAddress,", firstAddress)
-                console.log("dueDate2,", dueDate2)
-                console.log("{value: wethAmountFixed}", wethAmountFixed)
+              //   console.log("pairToken.address,", pairToken.address)
+              //   console.log("tokenAmount,", tokenAmount)
+              //   console.log("tokenAmountslipped,", tokenAmountslipped)
+              //   console.log("wethAmountslipped,", wethAmountslipped)
+              //   console.log("firstAddress,", firstAddress)
+              //   console.log("dueDate2,", dueDate2)
+              //   console.log("{value: wethAmountFixed}", wethAmountFixed)
+
+
               const swapTx = await routerContract.addLiquidityETH(
                 pairToken.address,
                 tokenAmount,
@@ -667,8 +698,10 @@ const store = createStore({
                 wethAmountslipped,
                 firstAddress,
                 dueDate2,
-                {value: wethAmountFixed}
+                {value: wethAmount}
               )
+
+
               await swapTx.wait()
               await context.dispatch('getLiquidity')
               resolve(swapTx)
@@ -882,9 +915,10 @@ const store = createStore({
             const token0Address = await lpContract.token0()
             const token1Address = await lpContract.token1()
             console.log(`. . .2/3. getReserves token0:${token0Address} token1:${token1Address} | `)
+            console.log(`. . .2/3.1. names token0:${(tokens[0].address == token0Address ? tokens[0].id : tokens[0].id)}`)
             console.table({
-              [tokens[0].address == token0Address ? tokens[0].id : tokens[1].id]: ethers.utils.formatEther(getReserves[0]),
-              [tokens[1].address == token1Address ? tokens[1].id : tokens[0].id]: ethers.utils.formatEther(getReserves[1]),
+              [token0Address]: ethers.utils.formatEther(getReserves[0]),
+              [token1Address]: ethers.utils.formatEther(getReserves[1]),
             })
             const balanceTx = await lpContract.balanceOf(firstAddress)
             let parsedBalanceTx = parseDecimals(parseFloat(ethers.utils.formatEther(balanceTx)))
@@ -975,8 +1009,8 @@ const store = createStore({
             const token1Address = await lpContract.token1()
             console.log(`. . .2/3. getReserves token0:${token0Address} token1:${token1Address} `)
             console.table({
-              [tokens[0].address == token0Address ? tokens[0].id : tokens[1].id]: ethers.utils.formatEther(getReserves[0]),
-              [tokens[1].address == token1Address ? tokens[1].id : tokens[0].id]: ethers.utils.formatEther(getReserves[1]),
+              [token0Address]: (parsedWithDecimals[0].toFixed(17)),
+              [token1Address]: (parsedWithDecimals[1].toFixed(17)),
             })
 
             let newLp = {
@@ -1631,6 +1665,9 @@ console.log(". . .3/4. trading TOKEN -> TOKEN")
     },
     BASE_USD_ID(state) {
       return state.BASE_USD_ID
+    },
+    SCANNER(state) {
+      return state.SCANNER
     },
     eth(state) {
       return state.ethereum
