@@ -50,7 +50,7 @@
 		        		<div class="flex-column pa-2 n-flat border-r-15">
 		        			<div class="tx-xs tx-primary">{{tokenInputs.token0Amount}} {{tokens[0].id}}</div>
 		        			<div class="tx-xs tx-secondary">{{tokenInputs.token1Amount}} {{tokens[1].id}}</div>
-		        			<div class="tx-xs tx-secondary">Min: {{parseDecimals(tokenInputs.token1Amount * form.slippage / 100)}}</div>
+		        			<!-- <div class="tx-xs tx-secondary">Min: {{parseDecimals(tokenInputs.token1Amount * form.slippage / 100)}}</div> -->
 
 				        	<div class="flex-around w-100 ">
 				        		

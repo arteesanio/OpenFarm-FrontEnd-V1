@@ -12,7 +12,7 @@
 						{{LANG.exchange}}
 					</span>
 					<div class="flex" v-if="accs_length">
-			        	<div v-if="accs_length" @click="getTradeData" class="pa-2"
+			        	<div v-if="accs_length" @click="getTradeData(false)" class="pa-2"
 				        	:class="[ loading ? 'opacity-50 noclick' : 'clickable opacity-hover-50' ],
 			        				[(!loading && _secondInputIs0 ) ? 'tx-success' : '']"
 		    			>
@@ -260,7 +260,7 @@
 			},
 			async makeTrade() {
                 if (this.loading) { return }
-				if (this.token0amount < 0.00001 || this.token1amount < 0.00001) { return alert("too low")}
+				if (this.token0amount < 0.000001 || this.token1amount < 0.000001) { return alert("too low")}
                 this.loading = true
 				let trade = {token0amount: this.token0amount, token1amount: this.token1amount, slippage: parseFloat(this.$refs.settings.form.slippage)}
 				
@@ -296,6 +296,7 @@
 				let trade = {token0amount: this.token0amount, token1amount: this.token1amount}
 				if (refreshBalances)
 				{
+					console.log("refreshBalances", refreshBalances)
 					await this.$store.dispatch("refreshFirstAccount", true)
 				}
 				try {

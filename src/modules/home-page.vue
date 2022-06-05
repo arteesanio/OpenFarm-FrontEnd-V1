@@ -53,7 +53,8 @@
         methods: {
             async connectWallet() {
                 await this.$store.dispatch("connectWallet")
-                this.$refs.exchange.getAccountBalances(true)
+                this.$refs.exchange.getTradeData(true)
+                // this.$refs.exchange.getAccountBalances(true)
             },
         },
     }

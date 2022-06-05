@@ -1,6 +1,6 @@
 <template>
     <div class="flex-column flex-1 w-100"  >
-        <div class="mt-8 flex show-xl_x"></div>
+        <!-- <div class="mt-8 flex show-xl_x"></div> -->
         <div class="py-8" :class="[togglers.advanced ? 'n-flat ' : '']">
             <!-- <div class="n-inset py-8 px-3 mt-8"> -->
                 <!-- <div v-for="(article, index) in articles" :key="article.id">
@@ -54,12 +54,12 @@
                 </div>
                 
             </div>
-            <div class="my-8 flex"></div>
+            <!-- <div class="my-8 flex"></div>
             <div class="flex-between">
                 <div class="tx-xs clickable n-flat flex-align-start pa-2 border-r-10" @click="togglers.threed = !togglers.threed">
                     {{LANG.switchTo}} {{!togglers.threed ? '3D' : '2D'}}
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -84,7 +84,7 @@ export default {
 
             togglers: {
                 advanced: false,
-                threed: true,
+                threed: false,
             },
 
             form: {

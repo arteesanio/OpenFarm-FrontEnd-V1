@@ -3,11 +3,11 @@ import { Contract, providers, utils } from "ethers";
 
 export const parseTradeDataTokenAmounts = (_tokens, _tradeData) =>
 {
-  console.log("_tradeData***")
-  console.log(_tradeData)
-  console.log(_tokens)
-  console.log(_tokens[0].id)
-  console.log(_tokens[1].id)
+  // console.log("_tradeData***")
+  // console.log(_tradeData)
+  // console.log(_tokens)
+  // console.log(_tokens[0].id)
+  // console.log(_tokens[1].id)
   let tradeData = {..._tradeData}
 
   if (_tokens[0].id == "BTC")
@@ -25,7 +25,7 @@ export const parseTradeDataTokenAmounts = (_tokens, _tradeData) =>
 };
 export const fixBTCDecimalsMul = (_tokens, _tradeData) =>
 {
-  // console.log("_tradeData***")
+  // console.log("* * * fixBTCDecimalsMul * * *")
   // console.log(_tradeData)
   // console.log(_tokens)
   // console.log(_tokens[0].id)
@@ -34,18 +34,21 @@ export const fixBTCDecimalsMul = (_tokens, _tradeData) =>
 
   if (_tokens[0].id == "BTC")
   {
+    // console.log('_tokens[0].id == "BTC"')
     tradeData[0] = parseFloat(_tradeData[0]) * (10 ** 10)
   }
   if (_tokens[1].id == "BTC")
   {
+    // console.log('_tokens[1].id == "BTC"')
     tradeData[1] = parseFloat(_tradeData[1]) * (10 ** 10)
   }
   // console.log("_tradeData***")
-  // console.log(_tradeData)
+  // console.log("* * * fixBTCDecimalsMul tradeData * * *")
+  // console.log(tradeData)
   // console.log("_tradeData***")
   return [
-   tradeData[0] + "",
-   tradeData[1] + "",
+   tradeData[0],
+   tradeData[1],
   ]
 };
 export const fixBTCDecimalsDiv = (_tokens, _tradeData) =>
@@ -69,17 +72,17 @@ export const fixBTCDecimalsDiv = (_tokens, _tradeData) =>
   // console.log(_tradeData)
   // console.log("_tradeData***")
   return [
-   tradeData[0] + "",
-   tradeData[1] + "",
+   parseFloat(tradeData[0]),
+   parseFloat(tradeData[1]),
   ]
 };
 export const formatTradeDataTokenAmounts = (_tokens, _tradeData) =>
 {
-  console.log("_tradeData***")
-  console.log(_tradeData)
-  console.log(_tokens)
-  console.log(_tokens[0].id)
-  console.log(_tokens[1].id)
+  // console.log("_tradeData***")
+  // console.log(_tradeData)
+  // console.log(_tokens)
+  // console.log(_tokens[0].id)
+  // console.log(_tokens[1].id)
   let tradeData = {..._tradeData}
 
   if (_tokens[0].id == "BTC")
@@ -180,8 +183,7 @@ export const isMetaMaskInstalled = () => {
 export const parseDecimals = (x) => {
   if (typeof x.toString == "function" &&
       (
-        x.toString() == "115792089237316195423570985008687907853269984665640564039457.584007913129639935" || 
-        x.toString() == "115792089237316195423570985008687907853269984665640564039456.924007913129639905" || 
+        x > "115792089237316195423570985008687907853269984665640000000000" || 
         x.toString() == "1.157920892373162e+59"
       )
      )
