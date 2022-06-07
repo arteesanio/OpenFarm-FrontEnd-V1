@@ -82,6 +82,32 @@
 	        	/>
 				<div v-if="accs_length" class="w-100 flex-column">
 		        	<!-- <hr class="w-50 opacity-5"> -->
+		        	<div v-if="tokens[1].id == BASE_USD_ID && token1amount && token0amount && tokens[1].price && tokens[0].price"
+		        		class="flex-column tx-sm" 
+		        	>
+                        <!-- <span>X->USD <br> <span class="tx-xs">Oracle Price:</span> {{tokens[0].price}}</span> -->
+                        <span>{{tokens[0].id}}<span class="tx-xs"> Oracle Price:</span> {{tokens[0].price}}</span>
+                        <!-- <span>{{token1amount}}</span> -->
+                        <!-- <b class="ml-2">{{(tokens[0].price)/(token1amount)*tokenamount}}</b> -->
+                        <div class="flex flex-column" :class="[(tokens[0].price * token0amount >= token1amount ? 'tx-error' : 'tx-success')]">
+	                        <b class="ml-2 tx-xs">perfect rate: ${{ parseDecimals(_oracleEquivalentPrice0X) }}</b>
+	                        <span class="mx-2">you get</span>
+	                        <b class="ml-2 ">${{ token1amount }}</b>
+                        </div>
+		        	</div>
+		        	<div v-if="tokens[0].id == BASE_USD_ID && token1amount && token0amount && tokens[1].price && tokens[0].price"
+		        		class="flex-column tx-sm" 
+		        	>
+                        <span>{{tokens[1].id}}<span class="tx-xs"> Oracle Price:</span> {{tokens[1].price}}</span>
+                        <!-- <span>USD->X <br> <span class="tx-xs">Oracle Price:</span> {{tokens[1].price}}</span> -->
+                        <!-- <span>{{token1amount}}</span> -->
+                        <!-- <b class="ml-2">{{(tokens[0].price)/(token1amount)*tokenamount}}</b> -->
+                        <div class="flex flex-column" :class="[(this.token0amount / this.tokens[1].price >= token1amount ? 'tx-error' : 'tx-success')]">
+	                        <b class="ml-2 tx-xs">perfect rate: {{ parseDecimals(_oracleEquivalentPrice0) }}</b>
+	                        <span class="mx-2">you get:</span>
+	                        <b class="ml-2 ">{{ token1amount }}</b>
+                        </div>
+		        	</div>
 		        	<div class="flex-center tx-sm">
 		        		<span>{{LANG.trade}}</span>
 			        	<span class="tx-primary mx-2 tx-center">
@@ -208,8 +234,26 @@
 	        accs_length()     		{ return this.$store.getters.accs_length },
 	        
 	        BASE_TOKEN()            { return this.$store.getters.BASE_TOKEN },
+	        BASE_USD_ID()            { return this.$store.getters.BASE_USD_ID },
 	        token_list()            { return this.$store.getters.token_list },
 	        tokens() 				{ return this.$store.getters.tokens },
+
+	        _oracleEquivalentPrice0()
+	        {
+	        	return this.token0amount / this.tokens[1].price
+	        },
+	        _oracleEquivalentPrice0X()
+	        {
+	        	return this.tokens[0].price * this.token0amount
+	        },
+	        _oracleEquivalentPrice1()
+	        {
+	        	return this.tokens[1].price / this.token1amount
+	        },
+	        _oracleEquivalentPrice1X()
+	        {
+	        	return this.tokens[1].price * this.token1amount
+	        },
 
 	        _hasFirstTokenAllowance() {
 	            // if (!this.first_acc) return false
@@ -252,6 +296,7 @@
 	        },
 		},
 		methods: {
+			parseDecimals,
 			__updateTokenInput(index, data) {
 				this[`token${index}amount`] = data
 				// this.$refs.liquidity

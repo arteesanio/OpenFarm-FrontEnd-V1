@@ -12,7 +12,7 @@
 * components name same as fila name: test-component -> test-component.vue
 * args name repetition prefix with _
 
-* Store getters:
+# Store getters:
 	LANG, dark_mode, english_mode,
 
 	token_list, token_listAt, token, tokens, tokenAt,

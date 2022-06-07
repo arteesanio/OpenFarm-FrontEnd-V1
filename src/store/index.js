@@ -490,7 +490,9 @@ const store = createStore({
       // console.log(`post getTradeData -> ${tradeData.token0amount} ${tradeData.token1amount}`)
       // const tradeData = parseTradeDataTokenAmounts(tokens, _tradeData)
       console.log(`getTradeData -> ${_tradeData.token0amount} <${tokens[0].id}>s for ? <${tokens[1].id}> . . .`)
-      const amountIn = ethers.utils.parseEther(parseFloat(_tradeData.token0amount).toFixed(17));
+      const tradeDataParsedd = fixBTCDecimalsDiv(tokens, [_tradeData.token0amount, _tradeData.token1amount])
+      const amountIn = ethers.utils.parseEther(tradeDataParsedd[0].toFixed(17));
+      // const amountIn = ethers.utils.parseEther(parseFloat(_tradeData.token0amount).toFixed(17));
 
       return new Promise(async (resolve, reject) => {
         // console.log([CURRENT_NETWORK.BASE_USD_ADDRESS, CURRENT_NETWORK.WETH_ADDRESS])
@@ -509,14 +511,19 @@ const store = createStore({
           const amountsresult = await routerContract.getAmountsOut(amountIn, [tokens[0].address, CURRENT_NETWORK.BASE_USD_ADDRESS ,tokens[1].address])
           // console.log(ethers.utils.formatEther(amountsresult[0]), ethers.utils.formatEther(amountsresult[1]), ethers.utils.formatEther(amountsresult[2]))
           const parsedDecimalsAmountResult = fixBTCDecimalsMul(tokens, [ethers.utils.formatEther(amountsresult[0]),ethers.utils.formatEther(amountsresult[2])])
-          console.log(`. . .1.1/2. parsedDecimalsAmountResult: ${parsedDecimalsAmountResult}`)
+          console.log(`. . .1.1/2. parsedDecimalsAmountResult: ${parsedDecimalsAmountResult[1]}`)
           outString = parseDecimals(parseFloat(parsedDecimalsAmountResult[1]))
           resolve(outString)
           // const __parsedAmountResult1 = ethers.utils.formatEther(amountsresult[2])
           // const doubleparsedamount1 = formatTradeDataTokenAmounts(tokens, {token1amount: __parsedAmountResult1, token0amount: "0"}).token1amount
           // resolve(parseDecimals(parseFloat(doubleparsedamount1)))
         } else {
-          console.log(`. . .1/2. trading USD: {${inString}} for {${outString}}`)
+          if (tokens[0].id == CURRENT_NETWORK.BASE_USD_ID)
+          {
+            console.log(`. . .1/2. trading USD: {${inString}} for {${outString}}`)
+          } else {
+            console.log(`. . .1/2. trading : {${inString}} for {${outString}} USD`)
+          }
           const amountsresult = await routerContract.getAmountsOut(amountIn, [tokens[0].address, tokens[1].address]);
           const __parsedAmountResult1 = ethers.utils.formatEther(amountsresult[1])
           const doubleparsedamount1 = formatTradeDataTokenAmounts(tokens, {token1amount: __parsedAmountResult1, token0amount: "0"}).token1amount
@@ -1342,15 +1349,24 @@ const store = createStore({
         let aSigner = await newprovider.getSigner()
         const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, zigner)
 
-        let amountInStr = (tradeData.token0amount).toString()
-        let token0amount = ethers.utils.parseEther(amountInStr)
-        let amountOutStr = (tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17)
-        let token1amount = ethers.utils.parseEther(amountOutStr)
+        const tradeDataParsedd = fixBTCDecimalsDiv(tokens, [tradeData.token0amount, tradeData.token1amount * (tradeData.slippage / 100)])
+
+        let token0amount = ethers.utils.parseEther(tradeDataParsedd[0].toFixed(17))
+        let amountInStr = tradeDataParsedd[0].toFixed(17)
+        let token1amount = ethers.utils.parseEther(tradeDataParsedd[1].toFixed(17))
+        let amountOutStr = tradeDataParsedd[1].toFixed(17)
+        // let token0amount = ethers.utils.parseEther((tradeData.token0amount).toString())
+        // let token1amount = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
+
+        // let amountInStr = (tradeData.token0amount).toString()
+        // let token0amount = ethers.utils.parseEther(amountInStr)
+        // let amountOutStr = (tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17)
+        // let token1amount = ethers.utils.parseEther(amountOutStr)
         let dueDate = parseInt(Date.now() / 1000) + 1800
-        console.log(`trade ${tradeData.token0amount} ${tokens[0].id} for ${tradeData.token1amount} ${tokens[1].id} . . .`)
+        console.log(`makeTrade ${tradeDataParsedd[0]} ${tokens[0].id} for ${tradeDataParsedd[1]} ${tokens[1].id} . . .`)
         console.log(`. . .1/4. trade addresses ${tokens[0].id}: ${tokens[0].address} for ${tokens[1].id}: ${tokens[1].address}`)
-        console.log(`. . .1/4. trade amountInStr amounts: ${amountInStr} for ${amountOutStr}`)
         console.log(`. . .1/4. trade amounts: ${tradeData.token0amount} for ${tradeData.token1amount}`)
+        console.log(`. . .1/4. trade amountInStr amounts: ${amountInStr} for ${amountOutStr}`)
         console.log(". . .2/4. slippage", tradeData.slippage,"trade",tradeData.token0amount, "for", (tradeData.token1amount * (tradeData.slippage / 100)))
 
         if (tradeData.token0amount && tradeData.token1amount)
@@ -1368,7 +1384,7 @@ console.log(". . .3/4. trading WETH -> USD")
                     [CURRENT_NETWORK.WETH_ADDRESS, tokens[1].address],
                     firstAddress,
                     dueDate,
-                    {value: ethers.utils.parseEther(tradeData.token0amount)}
+                    {value: token0amount}
                 )
                 let result = await swapTx.wait()
                 await context.dispatch('refreshFirstAccount')
@@ -1387,7 +1403,7 @@ console.log(". . .3/4. trading WETH -> TOKEN")
                     [CURRENT_NETWORK.WETH_ADDRESS, CURRENT_NETWORK.BASE_USD_ADDRESS, tokens[1].address],
                     firstAddress,
                     dueDate,
-                    {value: ethers.utils.parseEther(tradeData.token0amount)}
+                    {value: token0amount}
                 )
                 let result = await swapTx.wait()
                 await context.dispatch('refreshFirstAccount')
@@ -1527,8 +1543,13 @@ console.log(". . .3/4. trading TOKEN -> TOKEN")
         let aSigner = await newprovider.getSigner()
         const routerContract = new Contract(CURRENT_NETWORK.ROUTER_ADDRESS, ABIS.ROUTER, zigner)
 
-        let token0amount = ethers.utils.parseEther((tradeData.token0amount).toString())
-        let token1amount = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
+        const tradeDataParsedd = fixBTCDecimalsDiv(tokens, [tradeData.token0amount, tradeData.token1amount * (tradeData.slippage / 100)])
+
+        let token0amount = tradeDataParsedd[0]
+        let token1amount = tradeDataParsedd[1]
+        // let token0amount = ethers.utils.parseEther((tradeData.token0amount).toString())
+        // let token1amount = ethers.utils.parseEther((tradeData.token1amount * (tradeData.slippage / 100)).toFixed(17))
+
         let dueDate = parseInt(Date.now() / 1000) + 1800
         console.log(`trade ${tradeData.token0amount} ${tokens[0].id} for ${tradeData.token1amount} ${tokens[1].id}`)
         console.log("slippage", tradeData.slippage,"trade",tradeData.token0amount, "for", (tradeData.token1amount * (tradeData.slippage / 100)))
@@ -1543,7 +1564,7 @@ console.log(". . .3/4. trading TOKEN -> TOKEN")
                   [CURRENT_NETWORK.WETH_ADDRESS, tokens[1].address],
                   firstAddress,
                   dueDate,
-                  {value: ethers.utils.parseEther(tradeData.token0amount)}
+                  {value: token0amount}
               )
               let result = await swapTx.wait()
               await context.dispatch('refreshFirstAccount')
