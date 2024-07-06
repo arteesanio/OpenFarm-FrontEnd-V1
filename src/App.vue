@@ -8,7 +8,10 @@
 
         <home-page v-if="is_metaMask" />
         <div v-else>
-            <h1>Please, install or login Metamask.</h1>
+            <h1 style="text-align: center; margin-top: 12px">Please install Metamask.</h1>
+            <div style="text-align: center;">
+                <img class="opacity-50" src="/screenshot.png" />
+            </div>
         </div>
 
     </div>

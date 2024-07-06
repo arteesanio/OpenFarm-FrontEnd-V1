@@ -177,6 +177,7 @@ export const CONTRACT_HELPER = {
 
 export const isMetaMaskInstalled = () => {
     const { ethereum } = window;
+    console.log("ethereum", ethereum)
     return Boolean(ethereum && ethereum.isMetaMask);
 };
 

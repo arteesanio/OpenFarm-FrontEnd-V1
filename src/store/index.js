@@ -359,7 +359,7 @@ const store = createStore({
         const aBalance = await BLOCKCHAIN.getBalance(firstAddress)
         // console.log(`*getting base balance. . .`)
         const myparsedBalance = parseDecimals(parseFloat(ethers.utils.formatEther(aBalance)))
-        console.log(`. . .1/3. BASE_TOKEN balance: ${myparsedBalance}`)
+        console.log(aBalance,`. . .1/3. BASE_TOKEN balance: ${myparsedBalance}`)
 
         // let newAccount = {
         //   balance: myparsedBalance,
@@ -376,6 +376,10 @@ const store = createStore({
             balance: parseFloat(myparsedBalance),
           }
         )
+
+        if (!myparsedBalance) {
+          return
+        }
 
 
         const tokens = context.getters.tokens
