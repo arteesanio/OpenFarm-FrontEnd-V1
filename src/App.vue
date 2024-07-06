@@ -10,7 +10,7 @@
         <div v-else>
             <h1 style="text-align: center; margin-top: 12px">Please install Metamask.</h1>
             <div style="text-align: center;">
-                <img width="250px" class=" opacity-50" src="/screenshot.png" />
+                <img width="250px" class="border-r-10 opacity-50" src="/screenshot.png" />
             </div>
         </div>
 
